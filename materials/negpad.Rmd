@@ -351,44 +351,29 @@ summary(betareg(resp01 ~ condition * truth,
              data = filter(all.data, sent.type == "negative")))
 ```
 
-Try doing this in Stan. Code from (here)[https://github.com/mclark--/Miscellaneous-R-Code/blob/master/ModelFitting/Bayesian/rstan_MixedModelBetaRegression.R]
-
-```{r}
-data(GasolineYield, package='betareg')
-hist(GasolineYield$yield)
-```
-
-```{r}
-library(mgcv)
-modgam = gam(yield ~ scale(temp, scale=F) + s(batch, bs='re'), data=GasolineYield, family=betar(link="logit"))
-summary(modgam)  
-```
-
-Stan model code
+Try doing this in Stan. Stan code lightly modified from (https://github.com/mclark--/Miscellaneous-R-Code/blob/master/ModelFitting/Bayesian/rstan_MixedModelBetaRegression.R)
 
 ```{r}
 stanmodelcode <-'
 data {                              
   int<lower=0> N;                   // number of observations
-  int<lower=1> L;                   // number of batches
-  vector[N] yield;                  // response
-  int<lower=1,upper=L> id[N];       // batch
-  vector[N] temp;                   // temperature
+  int<lower=1> L;                   // number of subjects
+  vector[N] resp;                   // resp (was yield)
+  int<lower=1,upper=L> id[N];       // subject (was batch)
+  vector[N] cond;                   // condition (was temp)
 }
-transformed data {
-  vector[N] tempCen;
-  tempCen <- temp - mean(temp);     // centered explanatory variable
-}
+
 parameters {
   real Intercept;                   // "fixed" effects
-  real betaTemp;
+  real betaCond;
   real<lower=0> phi;                // dispersion parameter
   real<lower=0> sd_int;             // sd for ints
-  real<lower=0> sd_beta;            // sd for temp
+  real<lower=0> sd_beta;            // sd for cond
   vector[L] gammaIntercept;         // individual effects
-  vector[L] gammaTemp;              // individual effects
+  vector[L] gammaCond;              // individual effects
 }
-transformed parameters{
+
+transformed parameters {
   vector<lower=0>[N] A;             // parameter for beta distn
   vector<lower=0>[N] B;             // parameter for beta distn
   vector<lower=0,upper=1>[N] yhat;  // transformed linear predictor
@@ -396,21 +381,22 @@ transformed parameters{
   vector[L] SlopeRE;
   for (l in 1:L){
     IntRE[l] <- gammaIntercept[l]*sd_int;
-    SlopeRE[l] <- gammaTemp[l]*sd_beta ;
-  }
+    SlopeRE[l] <- gammaCond[l]*sd_beta ;
+}
   
-  // model calculations
-  for(n in 1:N) {
-    yhat[n] <- inv_logit((IntRE[id[n]] + Intercept) + (SlopeRE[id[n]] + betaTemp) * tempCen[n]);   
+// model calculations
+for(n in 1:N) {
+  yhat[n] <- inv_logit((IntRE[id[n]] + Intercept) + (SlopeRE[id[n]] + betaCond) * cond[n]);   
   }
   
   A <- yhat * phi;           
   B <- (1.0-yhat) * phi;     
 }
+
 model {
   // priors
   Intercept ~ normal(0, 10);
-  betaTemp ~ normal(0, 1);          
+  betaCond ~ normal(0, 1);          
   
   sd_int ~ cauchy(0, 2.5);        
   sd_beta ~ cauchy(0, 2.5);        
@@ -418,29 +404,45 @@ model {
                                     // matt trick used for following; 
                                     // else slower and convergence issues
   gammaIntercept ~ normal(0, 1);    // random intercepts for each batch
-  gammaTemp ~ normal(0, 1);         // random slopes for each batch
+  gammaCond ~ normal(0, 1);         // random slopes for each batch
   // likelihood
-  yield ~ beta(A, B);
+  resp ~ beta(A, B);
 }
 '
 ```
 
-Model run.
+Model run. Options from (https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started#how-to-install-rstan)
 
 ```{r}
 library(rstan)
-modelMatrix = data.frame(1, GasolineYield[,'temp', drop=F])
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
 
-dat = list(N = nrow(GasolineYield), yield=GasolineYield$yield, 
-           temp=GasolineYield$temp, id=as.numeric(GasolineYield$batch), L=10) # 10 = number of batches
+model.data <- all.data %>%
+  filter(truth=="True", sent.type == "negative") %>%
+  rename(cond = condition) 
 
+# ugh ugh ugh - but consecutively numbers these
+model.data$subid.n <- as.numeric(as.factor(as.numeric(model.data$subid)))
 
-### Run the model and check diagnostics
-test <- stan(model_code = stanmodelcode, model_name = "example", 
-             init=0,  # initializing unbounded at zero or setting the range for random init values proved useful
+dat = list(N = nrow(model.data), 
+           resp=model.data$resp01, 
+           cond=as.numeric(model.data$cond)-1, # make 0 = none, 1 = target
+           id=model.data$subid.n,
+           L=length(unique(model.data$subid))) # 10 = number of batches
+```
+
+Run the model and check diagnostics
+
+```{r}
+# initializing unbounded at zero or setting the range for random init values proved useful
+test <- stan(model_code = stanmodelcode, model_name = "negpad", 
+             init=0,  
              # init_r=.01,  
              data = dat, iter = 2000, warmup=200, thin=1, chains = 2, 
-             pars = c('Intercept','betaTemp','IntRE', 'SlopeRE', 'phi', 'sd_int', 'sd_beta'), verbose = F, refresh=2000/4) 
+             pars = c('Intercept','betaCond','IntRE', 'SlopeRE', 
+                      'phi', 'sd_int', 'sd_beta'), 
+             verbose = F, refresh=2000/4) 
 
 # diagnostics
 traceplot(test, inc=T)
@@ -448,23 +450,20 @@ ainfo <- get_adaptation_info(test)
 cat(ainfo[[1]])
 samplerpar = get_sampler_params(test)[[1]]
 summary(samplerpar)
-pairs(test, pars=c('Intercept', 'betaTemp'))
+pairs(test, pars=c('Intercept', 'betaCond'))
 
 # summary
 print(test, digits_summary=4)
 ```
 
+Full run
 
-################
-### Full run ###
-################
-
+```{r}
 ### set iterations etc.
 iters = 22000
 wu = 2000
 thin = 20
 nchains = 4
-
 
 ### setup and run in parallel
 library(parallel)
@@ -474,12 +473,16 @@ clusterEvalQ(cl, library(rstan))
 clusterExport(cl, c('stanmodelcode', 'dat', 'test', 'iters', 'wu', 'thin')) 
 
 p = proc.time()
-parfit = parSapply(cl, 1:nchains, function(i) stan(model_code = stanmodelcode, model_name = "mixedreg", 
-                                                   init=0,       # see comment in test run
-                                                   # init_r=.01, 
-                                                   fit = test, 
-                                                   data = dat, iter = iters, warmup=wu, thin=thin, chains = 1, chain_id=i,
-                                                   verbose = T, refresh=iters/4), 
+parfit = parSapply(cl, 1:nchains, 
+                   function(i) stan(model_code = stanmodelcode, 
+                                    model_name = "mixedreg", 
+                                    init=0,       # see comment in test run
+                                    # init_r=.01, 
+                                    fit = test, 
+                                    data = dat, iter = iters, 
+                                    warmup=wu, thin=thin, chains = 1, 
+                                    chain_id=i,
+                                    verbose = T, refresh=iters/4), 
                    simplify=F) 
 
 proc.time() - p
@@ -499,15 +502,36 @@ summary(samplerpar)
 
 
 ### examine model
-print(fit2, pars = c('Intercept','betaTemp','IntRE', 'SlopeRE', 'phi', 'sd_int', 'sd_beta', 'lp__'), 
+print(fit2, pars = c('Intercept','betaCond','IntRE', 
+                     'SlopeRE', 'phi', 'sd_int', 'sd_beta', 'lp__'), 
       digits=4, probs = c(.025, .5, 0.975))
 
-traceplot(fit2, inc_warmup=F, pars = c('Intercept','betaTemp','IntRE', 'SlopeRE', 'phi', 'sd_int', 'sd_beta', 'lp__'))
+traceplot(fit2, inc_warmup=F, pars = c('Intercept','betaCond','IntRE',
+                                       'SlopeRE', 'phi', 'sd_int', 
+                                       'sd_beta', 'lp__'))
+```
 
+# Unused 
 
-### Compare to mgcv
+Compare to mgcv
+
+```{r}
 summary(modgam)
 gam.vcomp(modgam)
 gamIntRE = modgam$coeff[grep('batch', names(modgam$coef))]
 stanIntRE = colMeans(extract(fit2, par='IntRE')[[1]])
 cbind(gamIntRE, stanIntRE)
+```
+
+
+
+```{r}
+data(GasolineYield, package='betareg')
+hist(GasolineYield$yield)
+```
+
+```{r}
+library(mgcv)
+modgam = gam(yield ~ scale(temp, scale=F) + s(batch, bs='re'), data=GasolineYield, family=betar(link="logit"))
+summary(modgam)  
+```
