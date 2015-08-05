@@ -16,6 +16,15 @@ library(bootstrap)
 library(lme4)
 ```
 
+We're going to use Stan. Set some settings:
+
+```{r}
+library(rstan)
+library(rstanmulticore)
+rstan_options(auto_write = TRUE)
+options(mc.cores = parallel::detectCores())
+```
+
 Functions and add some style elements for ggplot2
 
 ```{r}
@@ -242,18 +251,18 @@ qplot(data=hist_data_4s, y=count, x=resp,
 
 ```{r}
 ms <- all.data %>%
-  group_by(sent.type, truth, condition, agegroup, subid) %>%
+  group_by(sent.type, truth, condition, subid) %>%
   summarise(resp = mean(resp)) %>%
-  group_by(sent.type, truth, condition, agegroup) %>%
+  group_by(sent.type, truth, condition) %>%
   summarise(cih = ci.high(resp),
             cil = ci.low(resp),
             m = mean(resp)) 
 
-ggplot(ms, aes(x = sent.type:truth, y = m, fill = condition)) + 
+ggplot(ms, aes(x = sent.type, y = m, fill = condition)) + 
   geom_bar(stat="identity", position = "dodge") + 
   geom_linerange(aes(ymin = cil, ymax = cih), 
                  position = position_dodge(width = .9)) +
-  facet_grid(.~agegroup)
+  facet_grid(.~truth)
 ```
 
 Statistics
@@ -314,7 +323,78 @@ ggplot(ms, aes(x = sent.type:truth, y = m, fill = condition)) +
 summary(glmer(bin.resp ~ (condition + agegroup + truth)^3  + (1|subid) 
              + (1|item), family = "binomial",
              data = filter(all.data, sent.type == "negative")))
+
+summary(glmer(bin.resp ~ (condition + agegroup + truth)^2  + (1|subid) 
+             + (1|item), family = "binomial",
+             data = filter(all.data, sent.type == "negative")))
+
+summary(glmer(bin.resp ~ condition + agegroup + (1|subid), 
+              family = "binomial",
+              data = filter(all.data, 
+                            truth == "True",
+                            sent.type == "negative")))
+
+## yields an interaction - doesn't converge with sent.type in ranef
+summary(glmer(bin.resp ~ condition * sent.type + agegroup + (1|subid),
+              family = "binomial",
+              data = filter(all.data, 
+                            truth == "True")))
+
+## yields an interaction 
+summary(glmer(bin.resp ~ condition * truth + (1|subid), 
+              family = "binomial",
+              data = filter(all.data, 
+                            sent.type == "negative")))
+
+## doesn't converge
+summary(glmer(bin.resp ~ condition * sent.type * truth + (1|subid), 
+              family = "binomial",
+              data = filter(all.data)))
+
 ```
+
+
+Try creating a "correct" variable.
+
+```{r}
+all.data <- all.data %>%
+  mutate(correct = ifelse(truth == "True", resp > 3, resp <= 3))
+
+ms <- all.data %>%
+  group_by(sent.type, truth, condition, agegroup, subid) %>%
+  summarise(correct = mean(correct)) %>%
+  group_by(sent.type, truth, agegroup, condition) %>%
+  summarise(cih = ci.high(correct),
+            cil = ci.low(correct),
+            m = mean(correct)) 
+
+ggplot(ms, aes(x = sent.type, y = m, fill = condition)) + 
+  geom_bar(stat="identity", position = "dodge") + 
+  geom_linerange(aes(ymin = cil, ymax = cih), 
+                 position = position_dodge(width = .9)) +
+  facet_grid(agegroup ~ truth)
+
+
+## doesn't converge
+summary(glmer(correct ~ condition * sent.type * truth + agegroup + 
+                (1|subid), 
+              family = "binomial",
+              data = all.data))
+
+## yields an interaction - doesn't converge with sent.type in ranef
+summary(glmer(bin.resp ~ condition * sent.type + agegroup + (1|subid),
+              family = "binomial",
+              data = filter(all.data, 
+                            truth == "True")))
+
+
+## yields no interaction 
+summary(glmer(bin.resp ~ condition * truth + agegroup + (1|subid), 
+              family = "binomial",
+              data = filter(all.data, 
+                            sent.type == "negative")))
+```
+
 
 ### Subjectwise mean distribution
 
@@ -332,206 +412,75 @@ qplot(round(m),
                     sent.type == "negative"))
 ```
 
-### Beta regression
+### Ad-hoc stats
 
-First try beta regression over the whole dataset - this violates independence assumptions (doesn't include subject-wise grouping) but is easy to fit. 
-
-Normalize responses into 0 - 1 first.
+First - this measure is definitely bimodal.
 
 ```{r}
-library(betareg)
-
-all.data <- all.data %>% 
-  mutate(resp01 = (resp - .99)/4.02)
-
-summary(betareg(resp01 ~ condition * sent.type * truth, 
-             data = all.data))
-
-summary(betareg(resp01 ~ condition * truth, 
-             data = filter(all.data, sent.type == "negative")))
+library(diptest)
+dip.test(all.data$resp)
+dip.test(all.data$resp[all.data$condition == "none"])
+dip.test(all.data$resp[all.data$condition == "target"])
 ```
 
-Try doing this in Stan. Stan code lightly modified from (https://github.com/mclark--/Miscellaneous-R-Code/blob/master/ModelFitting/Bayesian/rstan_MixedModelBetaRegression.R)
+Second, we can reject the null of no condition difference if we treat trials independently with $\chi^2$.
 
 ```{r}
-stanmodelcode <-'
-data {                              
-  int<lower=0> N;                   // number of observations
-  int<lower=1> L;                   // number of subjects
-  vector[N] resp;                   // resp (was yield)
-  int<lower=1,upper=L> id[N];       // subject (was batch)
-  vector[N] cond;                   // condition (was temp)
-}
+ms <- all.data %>%
+  filter(truth == "True", sent.type == "negative")
 
-parameters {
-  real Intercept;                   // "fixed" effects
-  real betaCond;
-  real<lower=0> phi;                // dispersion parameter
-  real<lower=0> sd_int;             // sd for ints
-  real<lower=0> sd_beta;            // sd for cond
-  vector[L] gammaIntercept;         // individual effects
-  vector[L] gammaCond;              // individual effects
-}
+qplot(resp, fill = condition, position = "dodge",  data=ms) 
 
-transformed parameters {
-  vector<lower=0>[N] A;             // parameter for beta distn
-  vector<lower=0>[N] B;             // parameter for beta distn
-  vector<lower=0,upper=1>[N] yhat;  // transformed linear predictor
-  vector[L] IntRE;
-  vector[L] SlopeRE;
-  for (l in 1:L){
-    IntRE[l] <- gammaIntercept[l]*sd_int;
-    SlopeRE[l] <- gammaCond[l]*sd_beta ;
-}
-  
-// model calculations
-for(n in 1:N) {
-  yhat[n] <- inv_logit((IntRE[id[n]] + Intercept) + (SlopeRE[id[n]] + betaCond) * cond[n]);   
-  }
-  
-  A <- yhat * phi;           
-  B <- (1.0-yhat) * phi;     
-}
-
-model {
-  // priors
-  Intercept ~ normal(0, 10);
-  betaCond ~ normal(0, 1);          
-  
-  sd_int ~ cauchy(0, 2.5);        
-  sd_beta ~ cauchy(0, 2.5);        
-  phi ~ cauchy(0, 5);         
-                                    // matt trick used for following; 
-                                    // else slower and convergence issues
-  gammaIntercept ~ normal(0, 1);    // random intercepts for each batch
-  gammaCond ~ normal(0, 1);         // random slopes for each batch
-  // likelihood
-  resp ~ beta(A, B);
-}
-'
+xtab <- xtabs(~ factor(resp) +  condition, data= ms)
+chisq.test(xtab)
 ```
 
-Model run. Options from (https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started#how-to-install-rstan)
+Can we do subject averages?
 
 ```{r}
-library(rstan)
-rstan_options(auto_write = TRUE)
-options(mc.cores = parallel::detectCores())
+ms <- all.data %>%
+  filter(truth == "True", sent.type == "negative") %>%
+  group_by(subid, condition) %>%
+  summarise(resp = mean(resp))
 
-model.data <- all.data %>%
-  filter(truth=="True", sent.type == "negative") %>%
-  rename(cond = condition) 
+qplot(resp, fill = condition, position = "dodge",  binwidth = 1, data=ms) 
 
-# ugh ugh ugh - but consecutively numbers these
-model.data$subid.n <- as.numeric(as.factor(as.numeric(model.data$subid)))
-
-dat = list(N = nrow(model.data), 
-           resp=model.data$resp01, 
-           cond=as.numeric(model.data$cond)-1, # make 0 = none, 1 = target
-           id=model.data$subid.n,
-           L=length(unique(model.data$subid))) # 10 = number of batches
+xtab <- xtabs(~ factor(floor(resp)) +  condition, data= ms)
+chisq.test(xtab)
 ```
 
-Run the model and check diagnostics
+Ok, so this average actually destroys some structure in the data, because participants are actually idiosyncratic in their answers.
+
+Some pairwise analysis. 
 
 ```{r}
-# initializing unbounded at zero or setting the range for random init values proved useful
-test <- stan(model_code = stanmodelcode, model_name = "negpad", 
-             init=0,  
-             # init_r=.01,  
-             data = dat, iter = 2000, warmup=200, thin=1, chains = 2, 
-             pars = c('Intercept','betaCond','IntRE', 'SlopeRE', 
-                      'phi', 'sd_int', 'sd_beta'), 
-             verbose = F, refresh=2000/4) 
+ms <- all.data %>%
+  filter(truth == "True", sent.type == "negative") %>%
+  group_by(subid, condition) %>%
+  summarise(resp = mean(resp), 
+            correct = mean(correct))
 
-# diagnostics
-traceplot(test, inc=T)
-ainfo <- get_adaptation_info(test)
-cat(ainfo[[1]])
-samplerpar = get_sampler_params(test)[[1]]
-summary(samplerpar)
-pairs(test, pars=c('Intercept', 'betaCond'))
-
-# summary
-print(test, digits_summary=4)
+with(ms, t.test(resp[condition == "none"], resp[condition == "target"]))
+with(ms, t.test(correct[condition == "none"], correct[condition == "target"]))
 ```
 
-Full run
+and within age groups.
 
 ```{r}
-### set iterations etc.
-iters = 22000
-wu = 2000
-thin = 20
-nchains = 4
+ms <- all.data %>%
+  filter(truth == "True", sent.type == "negative") %>%
+  group_by(subid, condition, agegroup) %>%
+  summarise(resp = mean(resp), 
+            correct = mean(correct))
 
-### setup and run in parallel
-library(parallel)
-cl = makeCluster(4)
+with(ms, t.test(resp[condition == "none" & agegroup == 3], 
+                resp[condition == "target" & agegroup == 3]))
+with(ms, t.test(correct[condition == "none" & agegroup == 3], 
+                correct[condition == "target" & agegroup == 3]))
 
-clusterEvalQ(cl, library(rstan))
-clusterExport(cl, c('stanmodelcode', 'dat', 'test', 'iters', 'wu', 'thin')) 
-
-p = proc.time()
-parfit = parSapply(cl, 1:nchains, 
-                   function(i) stan(model_code = stanmodelcode, 
-                                    model_name = "mixedreg", 
-                                    init=0,       # see comment in test run
-                                    # init_r=.01, 
-                                    fit = test, 
-                                    data = dat, iter = iters, 
-                                    warmup=wu, thin=thin, chains = 1, 
-                                    chain_id=i,
-                                    verbose = T, refresh=iters/4), 
-                   simplify=F) 
-
-proc.time() - p
-
-stopCluster(cl)
-
-
-### combine the chains
-fit2 = sflist2stanfit(parfit)
-
-
-### examine some diagnostics
-ainfo = get_adaptation_info(fit2)
-cat(ainfo[[1]])
-samplerpar = get_sampler_params(fit2)[[1]]
-summary(samplerpar)
-
-
-### examine model
-print(fit2, pars = c('Intercept','betaCond','IntRE', 
-                     'SlopeRE', 'phi', 'sd_int', 'sd_beta', 'lp__'), 
-      digits=4, probs = c(.025, .5, 0.975))
-
-traceplot(fit2, inc_warmup=F, pars = c('Intercept','betaCond','IntRE',
-                                       'SlopeRE', 'phi', 'sd_int', 
-                                       'sd_beta', 'lp__'))
+with(ms, t.test(resp[condition == "none" & agegroup == 4], 
+                resp[condition == "target" & agegroup == 4]))
+with(ms, t.test(correct[condition == "none" & agegroup == 4], 
+                correct[condition == "target" & agegroup == 4]))
 ```
 
-# Unused 
-
-Compare to mgcv
-
-```{r}
-summary(modgam)
-gam.vcomp(modgam)
-gamIntRE = modgam$coeff[grep('batch', names(modgam$coef))]
-stanIntRE = colMeans(extract(fit2, par='IntRE')[[1]])
-cbind(gamIntRE, stanIntRE)
-```
-
-
-
-```{r}
-data(GasolineYield, package='betareg')
-hist(GasolineYield$yield)
-```
-
-```{r}
-library(mgcv)
-modgam = gam(yield ~ scale(temp, scale=F) + s(batch, bs='re'), data=GasolineYield, family=betar(link="logit"))
-summary(modgam)  
-```

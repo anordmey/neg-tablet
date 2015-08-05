@@ -21,7 +21,6 @@ ci.low <- function(x) {
 ci.high <- function(x) {
   quantile(bootstrap(1:length(x),1000,theta,x)$thetastar,.975)}
 
-
 #Load in data
 all.data <- read.csv("negpad_long_data.csv")
 
@@ -277,3 +276,7 @@ t.test(resp ~ condition, fours_subs)
 
 subs <- aggregate(resp ~ subid + condition, all.data, mean)
 t.test(resp ~ condition, subs)
+
+
+
+######## BETA REGRESSION #####
