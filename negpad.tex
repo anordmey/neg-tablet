@@ -14,16 +14,15 @@
 
 % comment command
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
-
-%This should have been the title of negatron.  
-\title{Not all true sentences are created equal: Adults and children are sensitive to the contexts of negation}
+ 
+\title{Uninformative negation is infelicitous to both adults and children}
 
 \author{Ann E. Nordmeyer and Michael C. Frank}
 \affiliation{Department of Psychology, Stanford University}
 
 \shorttitle{Contexts of negation}
 
-\abstract{Why  do  some  negative  sentences  sound  strange,  even  when they are both true and grammatical?  We explore the pragmatics of negation by examining adults’ and children's explicit felicity judgments of negative sentences in context. In Experiments 1 and 2, we found that  a  pragmatically  supportive  context  elicited  higher  felicity ratings for negative sentences, and that negative sentences expressing nonexistence were rated higher than negative sentences referring to an alternative object.  A model of the informativeness of a sentence in context predicts our results, suggesting that the relative felicity of negation in context is due to general pragmatic principles rather than the conceptual difficulty of negation. In Experiment 3, we showed that children are also sensitive to the contexts of true negative sentences, suggesting that children also prefer negative sentences when they are produced in a more informative context.  We discuss the pragmatics  of  negation  in  light  of  these  results,  arguing  that both adults' and children's difficulty processing negation is due to changes in the informativeness, and thus the felicity, of these sentences in different contexts.}  
+\abstract{REVISE: Why  do  some  negative  sentences  sound  strange,  even  when they are both true and grammatical?  We explore the pragmatics of negation by examining adults’ and children's explicit felicity judgments of negative sentences in context. In Experiments 1 and 2, we found that  a  pragmatically  supportive  context  elicited  higher  felicity ratings for negative sentences, and that negative sentences expressing nonexistence were rated higher than negative sentences referring to an alternative object.  A model of the informativeness of a sentence in context predicts our results, suggesting that the relative felicity of negation in context is due to general pragmatic principles rather than the conceptual difficulty of negation. In Experiment 3, we showed that children are also sensitive to the contexts of true negative sentences, suggesting that children also prefer negative sentences when they are produced in a more informative context.  We discuss the pragmatics  of  negation  in  light  of  these  results,  arguing  that both adults' and children's difficulty processing negation is due to changes in the informativeness, and thus the felicity, of these sentences in different contexts.}  
 
 \begin{document}
 \maketitle
@@ -31,36 +30,51 @@
 
 \section{Introduction}
 
-%Do I want to set this up as the "paradox of negation" instead?  I decided not to, but mostly because EVERY paper I've ever written starts with that idea, and this feels more engaging -- but it might not be totally on point?
-
 A sentence that is both grammatical and true can nevertheless sound odd in some contexts. If you open a mysterious box and find that it is empty, it's weird to say ``This box doesn't have any chocolates in it,'' despite the truth of the proposition. But the same sentence becomes perfectly reasonable if you are in a chocolate store surrounded by boxes filled with chocolate.  What is it about context that makes some sentences sound strange (\emph{infelicitous}) in one situation, but normal in another?  
 
-Theories of pragmatics attempt to provide an account of how language users move from the literal semantics of a sentence to an inference about the speaker's intended meaning. For example, according to Grice's \citeyear{grice1975} Cooperative Principle, speakers should produce utterances that are truthful, relevant, and informative.  By assuming that speakers do so, listeners can make inferences about intended meaning that go beyond the sentence's literal meaning. Modern neo-Gricean theories tend to derive such inferences from the tension between being informative with respect to a communicative goal and minimizing the effort expended \cite{horn1984,levinson2000,frank2012}. These theories make predictions about sentence felicity: As in our example above, a sentence that is not pragmatically optimal can sound strange even when it is both grammatical and true.
+Theories of pragmatics attempt to provide an account of how language users move from the literal semantics of a sentence to an inference about the speaker's intended meaning. For example, according to Grice's \citeyear{grice1975} Cooperative Principle, speakers should produce utterances that are truthful, relevant, and informative.  By assuming that speakers do so, listeners can make inferences about intended meaning that go beyond the sentence's literal meaning. Modern neo-Gricean theories tend to derive such inferences from the tension between being informative with respect to a communicative goal and minimizing the effort expended \cite{horn1984,levinson2000,frank2012}. These theories make predictions about sentence felicity: As in our example above, a sentence that is not pragmatically supported can sound strange even when it is both grammatical and true.  Here, we argue that both adults' and children's difficulty processing negative sentences can be explained by this relationship between contextual pragmatics and felicity.
 
-We explore this relationship between contextual pragmatics and felicity using negation. As the previous example demonstrates, negative sentences are particularly sensitive to the effects of context, making them a good case study.  When presented without any context, negative sentences are difficult to process relative to positive sentences \cite{hclark1972, carpenter1975, just1971, just1976}, but supportive contexts can substantially reduce this processing difficulty \cite{wason1965, glenberg1999, ludtke2006, nieuwland2008, dale2011, nordmeyer2014}.   Previous work has linked reaction time to syntactic surprisal, an information-theoretic measure predicting that low-probability utterances will be processed slower than high-probability utterances \cite{levy2008}.  If \emph{pragmatic surprisal}---the probability of an utterance being produced given the context\footnote{We operationalize context as information that influences expectations about an upcoming utterance.  Here we control context by manipulating the base rate of certain features in the stimuli; in more natural contexts this could include information in the setting of a conversation or another shared task  \citeA{clark1996}.}---is responsible for the context effects seen in negation processing, these context effects should be reflected in adults' explicit felicity judgments as well. 
+\subsection{The role of context in the processing of negation}
 
-If the effect of context on negation is primarily pragmatic in nature, we can also use negation as a case study to explore children's sensitivity to contextual pragmatics.  Work on children's acquisition of negation has found that preschoolers struggle to respond correctly to true negative sentences \cite{kim1985, nordmeyer2014b}, despite producing negation spontaneously and accurately before age two \cite{pea1980, pea1982}.  One possibility is that children are behaving rationally based on a Gricean view of communication.  In most experiments of children's comprehension of negation, children hear negative sentences without any supportive pragmatic context.  In contrast, studies that have elicited spontaneous negations from children tend to use familiar contexts, such as reading picture books in an interactive, game-like setting \cite{pea1982, hummer1993}.  When children hear a true negative sentence and indicate that it is ``wrong'' \cite<e.g.>{kim1985}, they may be reacting to the infelicity of the sentence rather than its truth value.  
+Negative sentences can be difficult to process, even for adults.  When presented without any context, people take longer to evaluate the truth of negative sentences such as ``star isn't above plus'' compared to positive sentences \cite{hclark1972, carpenter1975, just1971, just1976}.  Similarly, in EEG studies, participants who read true negative sentences like ``A bird is not a truck'' show a similar N400 response (a negative waveform that responds to semantically unexpected stimuli) as a corresponding false positive sentence like ``A bird is a truck'' \cite{fischler1983, ludtke2008}.  Based on these findings, it has been suggested that there is something specific to the representation of negation that makes processing negative sentences so challenging.
 
-Evidence is mixed regarding whether children are sensitive to Gricean pragmatic principles.  Some data suggest that children struggle to make scalar implicatures; for example, accepting a sentence like ``Elmo ate some of the cookies'' when Elmo actually ate \emph{all} of the cookies.  Other evidence, however, suggests that children are sensitive to pragmatics and can make pragmatic inferences about a number of domains such as contextually-based implicatures \cite{yoon2015, stiller2015}, adjective use \cite{horowitz2012, horowitz2014}, and epistemic states \cite{hochstein2014}.  By examining children's judgments of negative sentences in different contexts, we can ask whether children's aforementioned difficulty with negation is actually due to an awareness that the same sentence can be a ``good'' thing to say in one context, but a ``silly'' thing to say in another.
+As our original example demonstrates, however, negative sentences are particularly sensitive to the effects of context.    In a classic study, \citeNP{wason1965} found that when participants were asked to describe an array of e.g. seven red dots and one blue dot, participants who described the stimuli in terms of an exception to a rule (e.g. ``Circle number four is blue and the rest are red'') were faster to process true negative sentences compared to participants who described the stimuli in other ways (e.g. ``Seven circles are red and one is blue'').  Similarly, supportive written contexts, such as a narrative framing where the negated feature is made salient prior to reading the negative sentence, can facilitate the processing of negation \cite{glenberg1999, ludtke2006, nieuwland2008, dale2011}, and reduce the N400 response to true negative sentences \cite{nieuwland2008}.  Although these findings suggest that context can have a powerful effect on the processing of negative sentences, it is not clear what mechanism leads to this facilitative effect.  
 
-Our goals in this paper are twofold: First, we further probe adults' understanding of the contexts of negation.
-We focus on two types of negation: \emph{nonexistence} and \emph{alternative} negation.  The same sentence can express either of these concepts depending on the context.  For example, the sentence ``This box doesn't contain chocolate'' might refer to an empty box (e.g. nonexistence) or a box containing an alternative object (e.g. broccoli instead of chocolate).  Previous work suggests that adults are faster to identify the referent of nonexistence compared with alternative negation \cite{nordmeyer2013, nordmeyer2014b}.  This finding could be due to processing demands (e.g. identifying a missing feature is easier than identifying a changed feature), but it could also reflect an expectation about the pragmatics of negation.  Adults may find alternative negation infelicitous because they expect the sentence to describe present, rather than absent, features.  
+One possible mechanism is that general pragmatic principles can explain the both the processing cost of negation and the supportive effect of context.  In recent work (Nordmeyer \& Frank, under review), we demonstrated a graded effect of context on the processing of negation, with negative sentences processed faster as the base rate of the negated feature increased.  Specifically, negative sentences that were more relevant and informative given the context were processed faster.  We found that this effect of context could be reliably predicted by the probability of a speaker using the same sentence to describe the same picture.  Speakers are unlikely to produce sentences that are uninformative and irrelevant, and correspondingly listeners take longer to respond to unlikely sentences.  
 
-Second, we examine whether children are sensitive to the contexts of negative sentences, focusing on alternative negation in supported and unsupported contexts.  If children's difficulty comprehending negative sentences is due to conceptual complexity or an undeveloped semantic understanding of negation, then children should rate true negative sentences as bad regardless of the context in which they occur.  If, however, children are actually rating true negative sentences as ``wrong'' because of the infelicity of pragmatically unsupported negation, then we should see children's performance improve when they are asked to rate true negative sentences in a supportive context.  
-
-We examined the effects of a pragmatic context on adults' and children's explicit felicity judgments for different negative sentences.  In Experiment 1, we tested the effect of context on nonexistence negation and alternative negation.  We found that negative sentences presented in a supportive context were rated as more felicitous, and that nonexistence negation was rated higher than alternative negation.  In Experiment 2, we found that alternative negation was rated as more felicitous in a context where all of the other characters possessed the negated object, compared to contexts where the other characters possessed the alternative object or no object.  In Experiment 3, we show that three--five-year-olds children also rate true negative sentences as more felicitous in contexts where all of the other characters possess the negated object, suggesting early sensitivity to the contexts of negation.  We discuss these results within a neo-Gricean framework, demonstrating that a model of informativeness can predict the same qualitative pattern seen in our data.  Together these findings suggest that both adults' and children's felicity judgments reflect preferences for negative sentences that are more informative given the context.  
+Previous work has linked reaction time to syntactic surprisal, an information-theoretic measure predicting that low-probability utterances will be processed slower than high-probability utterances \cite{levy2008}.  If \emph{pragmatic surprisal}---the probability of an utterance being produced given the context---is responsible for the context effects seen in negation processing, these context effects should be reflected in adults' explicit felicity judgments as well, with more informative sentences eliciting higher felicity ratings than less informative sentences.  This finding would lend further support to our hypothesis that the effects of context on negative sentences are due to pragmatic principles that govern communication more generally, rather than some unique effect of negation. 
 
 
+\subsection{Children's understanding of negation}
+
+There is a puzzle in children's acquisition of negation: Although children begin producing negation spontaneously and accurately before age two \cite{bloom1973, pea1980, pea1982}, preschoolers struggle to respond correctly to true negative sentences.  For example, the majority of three-year-olds and nearly half of four- and five-year-olds classified true negative sentences as ``wrong'' when, for example, an experimenter pointed to an apple and said ``this is not a banana'' \cite{kim1985}, despite the fact that they had no difficultly classifying true and false positive sentences.   This finding, along with others \cite{gilkerson2005, loder2008, nordmeyer2014b}, suggests that children struggle to process negative sentences, despite the fact that they produce them so early.  
+
+One possible solution to this puzzle is that children are behaving rationally based on a Gricean view of communication.  In most experiments of children's comprehension of negation, such as the one described above, children hear negative sentences without any supportive pragmatic context.  In these contexts, although the sentences are not \emph{false}, they are perhaps \emph{wrong} according the the Cooperative Principle.  In contrast, studies that have elicited spontaneous negations from children tend to use familiar contexts, such as reading picture books in an interactive, game-like setting \cite{pea1982, hummer1993}.  When children hear a true negative sentence and indicate that it is ``wrong'' \cite<e.g.>{kim1985}, they may be reacting to the infelicity of the sentence rather than its truth value.  
+
+If the effect of context on negation is primarily pragmatic in nature, we can use negation as a case study to explore children's sensitivity to contextual pragmatics.  Evidence is mixed regarding whether children are sensitive to Gricean pragmatic principles.  Some data suggest that children struggle to make scalar implicatures; for example, accepting a sentence like ``Some of the horses jumped over the fence'' in a scenario where \emph{all} of the horses had jumped over the fence (\citeNP{papagragou2003}, see also \citeNP{noveck2001}) .  Other evidence, however, suggests that children are sensitive to pragmatics and can make pragmatic inferences in a number of domains such as contextually-based implicatures \cite{papafragou2004, barner2011, yoon2015, stiller2015}, adjective use \cite{horowitz2012, horowitz2014}, and epistemic states \cite{hochstein2014}.  By examining children's judgments of negative sentences in different contexts, we can ask whether children's aforementioned difficulty with negation is actually due to an awareness that the same sentence can be a ``good'' thing to say in one context, but a ``silly'' thing to say in another.
+
+\subsection{The current study}
+
+In this paper we explore the effect of context on the explicit sentence felicity judgments of adults and children.  We operationalize context as information that influences expectations about an upcoming utterance.   In natural contexts, the information that constitutes ``context'' could include visual information, words, or actions in the setting of a conversation or another shared task \citeA{clark1996}.  In our experiments, we use visual contexts in which we manipulate the base rate of certain features in the stimuli.  For example, in a context where three people have apples and one person does not, it feels very natural to describe the last person by saying ``He doesn't have apples.''  In contrast, in a context where no one is holding any objects (i.e. there are no apples present anywhere), the same sentence is uninformative, because it could refer to any of the people in the scene, and there is no reason to discuss apples.  In Experiments 1 and 2, we find that adults rate sentences in the former context as more felicitous than sentences in the latter context, supporting the findings of past research in the domain of sentence processing \cite{nordmeyer2014}.  
+
+We hypothesize that the effects of context on the felicity of negative sentences is driven primarily by Neo-Gricean pragmatic principles.  To formalize this prediction, we compare the results of our adult data in Experiments 1 and 2 to the predictions of a Rational Speech Act model \cite{frank2012}, which predicts that listeners expect speakers to produce maximally informative utterances. In the above examples, the RSA model predicts that the sentence ``he doesn't have apples'' is more informative -- and therefore more likely to be produced -- in the context where everyone else has apples, compared to the context where no one has apples, because in this context the utterance uniquely identifies the referent of the sentence.  We find that sentences that are more probable according to this model are rated as more felicitous by our participants.  
+
+In Experiment 3, we examine whether preschoolers are sensitive to the contexts of negative sentences.  If children's difficulty comprehending negative sentences is due to conceptual complexity or an undeveloped semantic understanding of negation, then these children should rate true negative sentences as bad regardless of the context in which they occur.  If, however, children are actually rating true negative sentences as ``wrong'' because of the infelicity of pragmatically unsupported negation, then we should see children's performance improve when they are asked to rate true negative sentences in a supportive, informative context.  We find evidence for the latter hypothesis, suggesting that children's difficulty understanding negative sentences on classic tests of comprehension is due to pragmatic sensitivity rather than a failure to process negation.
+
+The results of past research on negation suggest a paradox: Negative sentences are produced early by children and frequently throughout adulthood, yet both adults and children appear to find negation difficult on tasks that test their processing and comprehension.  Our data suggest that the difficulty of negative sentences is due primarily to the infelicity of negative sentences in unsupported contexts, rather than any representational or syntactic difficulty specific to negation.  Negative sentences are more likely to violate the Cooperative Principle, because a negative sentence can refer truthfully to a broader set of referents (e.g. at any given moment, there are more people in the world who are \emph{not} holding apples than people who \emph{are} holding apples, more boxes that do \emph{not} contain chocolate than boxes that \emph{do} contain chocolate, etc.), making negative sentences less informative by default.  In the right contexts, however, negative sentences can be just as informative as positive sentences, suggesting that the ``difficulty'' of negation is actually due to a general difficulty understanding unlikely and therefore infelicitous utterances.
 
 \section{Experiment 1}
 
-Experiment 1 explored how different contexts (see Figure \ref{fig:trial}) affected participants' felicity ratings for negative sentences.  Half of the participants in Experiment 1 saw sentences presented in a context where none of the surrounding characters had any objects (the \emph{none} condition), and the other half saw sentences presented in a context where everyone except for the target character possessed the negated object (the \emph{target} condition).  In half of the true negative trials, the referent of the negative sentence was a character who had nothing (nonexistence negation).  In the other half of true negative trials, the referent of the sentence was a character who had some other object (alternative negation).  Finally, we examined how different syntactic framings might influence sentence judgments (``has no X'' and ``doesn't have X''). If previously seen context effects are driven by the informativeness of negation in different contexts, then these same effects should appear regardless of the syntactic framing of the sentences.  
+In Experiment 1, we focused on two possible referents of negation.  The same negative sentence can refer to the absence of a feature (nonexistence) or to an alternative feature (alternative).  For example, the sentence ``This box doesn't contain chocolate'' might refer to an empty box (e.g. nonexistence) or a box containing an alternative object (e.g. broccoli instead of chocolate).  Previous work suggests that adults are faster to identify the referent of nonexistence compared with alternative negation \cite{nordmeyer2013, nordmeyer2014b}.  This finding could be due to processing demands (e.g. identifying a missing feature is easier than identifying a changed feature), but it could also reflect an expectation about the pragmatics of negation; adults may find alternative negation infelicitous because they expect the sentence to describe present, rather than absent, features.  
+
+Experiment 1 explored how different contexts affected participants' felicity ratings for negative sentences.  Half of the participants in Experiment 1 saw sentences presented in a context where none of the surrounding characters had any objects on their table (the \emph{none} condition), and the other half saw sentences presented in a context where everyone except for the target character possessed the negated object, e.g. apples (the \emph{target} condition).  In half of the true negative trials, the referent of the negative sentence was a character who had nothing (nonexistence negation).  In the other half of true negative trials, the referent of the sentence was a character who had some other object, e.g. a cat (alternative negation).  Finally, we examined how different syntactic framings might influence sentence judgments (e.g. ``has no apples'' and ``doesn't have apples''). If the facilitative effect of context on negation driven by the informativeness of negative sentences in different contexts, then these same effects should appear regardless of the syntactic framing of the sentences.  
 
 \subsection{Method}
 
 \subsubsection{Participants}
 
-We recruited 94 adults (50 male, 41 female, three declined to report gender) to participate in an online experiment through Amazon Mechanical Turk.  Participants ranged in age from 18-65.  We restricted participation to individuals in the United States. We paid 35 cents for the experiment, which took approximately five minutes to complete.  
+We recruited a planned sample of 100 adults to participate in an online experiment through Amazon Mechanical Turk; six participants were excluded for indicating that they were under 18 after completing the experiment, and two participants who did not list English as their native language were excluded.  Of the remaining 92 participants, 40 were male and 40 were female, three declined to report gender, and ages ranged from 18 -- 65+.  We restricted participation to individuals in the United States and paid 35 cents for the experiment, which took approximately five minutes to complete.  Participants were randomly assigned to either the \emph{none} condition (n=47) or the \emph{target} condition (n=45).  
+
 
 \subsubsection{Stimuli}
 
@@ -71,7 +85,6 @@ We created 16 trial items. On each trial, four Sesame Street characters were sho
 \begin{center} 
 \includegraphics[width=3in]{figures/trialtypes.pdf}
 \caption{\label{fig:trial} The five types of true negative trials across Experiment 1 and Experiment 2.  In this example, the target object is an apple and the alternative object is a cat. Below each set of pictures a sentence appeared about the character in red, e.g. ``Abby doesn't have an apple.''}  
-\vspace{-1cm}
 \end{center} 
 \end{figure}
 
@@ -83,25 +96,50 @@ The target character had a target object, an alternative object (``alternative''
 
 A slider bar was positioned beneath the sentence, with a seven-point scale ranging from ``Very Bad'' to ``Very Good.''  A progress bar at the top of the screen informed participants how much of the experiment they had completed. 
 
-\vspace{.2cm}
-
 \subsubsection{Procedure}
 
-Participants first saw an instructions screen that briefly described the task and informed them that they could stop at any time.  Once participants agreed to participate, they saw an instructions screen that explained the task in more detail.  Participants were asked to rate how ``good'' each sentence was based on how a hypothetical speaker might behave, e.g. ``if no one would ever say a particular sentence in this context, or if it is just wrong, rank that as `Very Bad,' but if something is right and sounds perfectly normal, mark it as `Very Good.''' Participants were encouraged to use the entire scale. On each trial the pictures, sentence, and slider bar appeared simultaneously, and participants had to make a selection on the scale in order to progress to the next trial.  
-
-\vspace{.2cm}
-
-\subsubsection{Data Processing}
-
-We excluded from analysis two participants who did not list English as their native language.  Thus, data from a total of 92 participants were analyzed, 47 in the \emph{none} context condition and 45 in the \emph{target} context condition.  
+Participants first saw an instructions screen that briefly described the task and informed them that they could stop at any time.  Once participants agreed to participate, they saw an instructions screen that explained the task in more detail.  Participants were asked to rate how ``good'' each sentence was based on how a hypothetical speaker might behave, e.g. ``if no one would ever say a particular sentence in this context, or if it is just wrong, rank that as `Very Bad,' but if something is right and sounds perfectly normal, mark it as `Very Good.''' Participants were encouraged to use the entire scale. On each trial the pictures, sentence, and slider bar appeared simultaneously, and participants had to make a selection on the scale in order to progress to the next trial.  The experiment can be viewed 
 
 \subsection{Results and Discussion}
 
-NOTE: For the cogsci paper, I analyzed just true negative sentences.  I thought I should go back and include the model of all negative sentences, not just true negatives.  But I realized that one reason I did it this way is because I can't run the full model on this data set, because the negation type var is only relevant for true negative sentences, not false negative sentences.  So the model just crashes.  I'm not sure what the best thing to do is -- I could include a model of all negative sentences (or all sentences, pos and neg, because I didn't train adults on the positive sentences the way I did for the kids) that looks at the context*truth value interaction, and then the model below as a follow-up to look at true negatives specifically?
+NOTE: Is this table of means too much?  There are so many different trial types in this experiment.  In the table I changed the phrase "negation type" to "referent type" because "negation type" doesn't make sense for the false positive trials (really what I mean is, does the sentence refer to someone with nothing or someone with some other object); I will probably make this change throughout if it seems sensible to you.  I spent a while thinking about the best way to organize this table; I'm not sure this is the best option.  Also, I ended up leaving the analysis with just true negative sentences...this is mostly because the graph with false sentences ends up just looking like a huge waste of space because the false negs are at floor and show no context effects.  Could I present a model of all negative sentences, and just plot the true negative means?
 
-True negative sentences were rated significantly higher in a \emph{target} context compared to a \emph{none} context. For example, the sentence ``Abby has no apples'' was rated higher when all of the other characters \emph{had} apples, compared to contexts where all of the other characters had nothing. This finding supports our hypotheses and replicates patterns previously seen in studies of processing time using explicit felicity judgments.  Negative sentences expressing nonexistence were rated as more felicitous than negative sentences referring to an alternative object (see Figure \ref{fig:s1}). True positive sentences did not show any effect of context, nor did false sentences of any sentence type, likely due to a ceiling effect for true positive sentences and a floor effect for false sentences.
- 
-To test the reliability of these findings, we fit a linear mixed-effects model examining the interaction between context, negation type (e.g. nonexistence or alternative), and negation framing (e.g. ``has no X'' vs. ``doesn't have X'') on felicity ratings.\footnote{ The model specification was as follows: \texttt{rating $\sim$ context~$\times$~negation type~$\times$~negation frame + (negation type~$\times$~negation frame~\textbar~subject) +  (negation type~$\times$~negation frame~\textbar~item)}.  Significance was calculated using the standard normal approximation to the $t$ distribution \cite{barr2013}. Data and analysis code can be found at \href{http://github.com/anordmey/cogsci15}{http://github.com/anordmey/cogsci15}.} Because we were primarily interested in the effects of context on true negative sentences, we focused on these trials in our analyses.  The effects of context on true negative sentences reported in both experiments are significant in full models of all sentence types as well.
+Participants treated the scale as expected, consistently rating true sentences much higher than false sentences.   Furthermore, participants consistently rated positive sentences higher than negative sentences.  There was no effect of context, syntactic frame, or referent type on true positive sentences, false positive sentences, or false negative sentences, likely due to a ceiling effect for true positive sentences and a floor effect for false sentences (see Table \ref{fig:m1}). 
+
+Focusing on true negative sentences, these sentences were rated significantly higher in a \emph{target} context compared to a \emph{none} context. For example, the sentence ``Abby has no apples'' was rated higher when all of the other characters \emph{had} apples, compared to contexts where all of the other characters had nothing. This finding supports our hypotheses and replicates patterns previously seen in studies of processing time using explicit felicity judgments.  Negative sentences expressing nonexistence were rated as more felicitous than negative sentences referring to an alternative object (see Figure \ref{fig:s1}). 
+
+\begin{table}[t]
+\caption{\label{tab:m1} Mean felicity rating for different trial types in Experiment 1, based on ratings given on a 7-point scale.}
+\begin{center}
+\small\addtolength{\tabcolsep}{-5pt}
+\begin{tabular}{llllrr}
+  \hline
+  Context & Sentence type & Truth Value & Referent Type & Mean & Std. Dev. \\ 
+  \hline
+  None & Positive (``has X'') & True & Target item & 6.51 & 0.89\\ 
+  None & Positive (``has X'') & False & Nothing & 2.51 & 1.94\\ 
+  None & Positive (``has X'') & False & Alternative item & 2.04 & 1.82\\ 
+  None & Negative (``doesn't have X'') & True & Nothing & 5.29 & 1.44\\ 
+  None & Negative (``doesn't have X'') & True & Alternative item & 4.83 & 1.92\\ 
+  None & Negative (``doesn't have X'') & False & Target item & 2.00 & 1.64\\ 
+  None & Negative (``has no X'') & True & Nothing & 4.78 & 1.68\\ 
+  None & Negative (``has no X'')  & True & Alternative item & 4.15 & 1.78\\ 
+  None & Negative (``has no X'') & False & Target item & 1.40 & 0.77\\ 
+  Target & Positive (``has X'') & True & Target item & 6.42 & 0.76\\ 
+  Target& Positive (``has X'') & False & Nothing & 1.88 & 1.47\\ 
+  Target & Positive (``has X'') & False & Alternative item & 1.83 & 1.73\\ 
+  Target & Negative (``doesn't have X'') & True & Nothing & 6.34 & 1.11\\ 
+  Target & Negative (``doesn't have X'') & True & Alternative item & 5.74 & 1.41\\ 
+  Target & Negative (``doesn't have X'') & False & Target item & 1.89 & 1.60\\ 
+  Target & Negative (``has no X'') & True & Nothing & 5.61 & 1.51\\ 
+  Target & Negative (``has no X'')  & True & Alternative item & 4.96 & 1.41\\ 
+  Target & Negative (``has no X'') & False & Target item & 1.58 & 0.99\\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+To test the reliability of these findings, we fit a linear mixed-effects model examining the interaction between context, negation type (e.g. nonexistence or alternative), and negation framing (e.g. ``has no X'' vs. ``doesn't have X'') on felicity ratings.\footnote{ The model specification was as follows: \texttt{rating $\sim$ context~$\times$~negation type~$\times$~negation frame + (negation type~$\times$~negation frame~\textbar~subject) +  (negation type~$\times$~negation frame~\textbar~item)}.  Significance was calculated using the standard normal approximation to the $t$ distribution \cite{barr2013}. Data and analysis code can be found at \href{http://github.com/anordmey/cogsci15}{http://github.com/anordmey/cogsci15}.}  Because we were primarily interested in the effects of context on true negative sentences, we focused on these trials in our analyses, though the effects reported here are significant in full models of all sentence types as well.
 
 Examining the model, we found a main effect of context, with true negative sentences presented in a \emph{target} context eliciting significantly higher ratings than true negative sentences presented in a \emph{none} context ($\beta= 1.08$, $p< .001$).  We found main effects of negation type, with alternative negation receiving lower ratings than nonexistence negation ($\beta= -.43$, $p< .05$), as well as a marginally significant effect of negation framing, with sentences of the form ``has no X'' receiving lower ratings than sentences of the form ``doesn't have X''  ($\beta= -.49$, $p= .052$).  There were no interactions between negation frame, negation type, and context.  
 
@@ -152,7 +190,7 @@ The addition of the ``foil'' context allowed us to test two competing hypotheses
 
 \subsubsection{Participants}
 
-We recruited 194 participants (115 male, 76 female, three declined to report gender) to participate in an online experiment through Amazon Mechanical Turk.  Participants ranged in age from 18-65.  We restricted participation to individuals in the United States. We paid 40 cents and the experiment took approximately seven minutes to complete.  
+We recruited a planned sample of 200 adults to participate in an online experiment through Amazon Mechanical Turk.  We excluded from our analysis six participants who indicated that they were under 18 after completing the experiment, four participants who did not list English as their native language, and six participants who had participated in a previous version of the experiment.  Of the remaining 184 participants, 109 were mail and 72 were female, three declined to report gender, and ages ranged from 18 -- 65+.  We restricted participation to individuals in the United States and paid 40 cents for the experiment, which took approximately seven minutes to complete.  
 
 \subsubsection{Stimuli}
 
@@ -164,15 +202,34 @@ In Experiment 2, context was a within-subjects factor with three levels. In the 
 
 The procedure was identical to Experiment 1.
 
-\subsubsection{Data Processing}
-
-We excluded from our analysis four participants who did not list English as their native language and six participants for having participated in a previous version of the study.  Thus, we analyzed data from a total of 184 participants.  
-
 \subsection{Results and Discussion}
 
-ANALYZE TRUE AND FALSE NEG?  Or all sentence types, including positive? It would be easy to do here, and all the expected main effects and interactions show up.  I feel like I should be consistent throughout, whatever I choose; see note in results section above.
+As in Experiment 1, participants rated true sentences much higher than false sentences, and consistently rated  positive sentences somewhat higher than negative sentences.  As before, context did not affect ratings for true positive sentences or false sentences (see Table \ref{m2}).  True negative sentences were rated significantly higher when they were presented in a \emph{target} context compared to either the \emph{none} context or the \emph{foil} context (Figure \ref{fig:s2}).  There was no difference between sentences presented in a \emph{foil} context and sentences presented in a \emph{none} context.  
 
-True negative sentences were rated significantly higher when they were presented in a \emph{target} context compared to either the \emph{none} context or the \emph{foil} context (Figure \ref{fig:s2}).  There was no difference between sentences presented in a \emph{foil} context and sentences presented in a \emph{none} context.  As in Experiment 1, context did not affect ratings for true positive sentences or false sentences.  
+\begin{table}[t]
+\caption{\label{tab:m2} Mean felicity rating for different trial types in Experiment 2, based on ratings given on a 7-point scale.}
+\begin{center}
+\small\addtolength{\tabcolsep}{-5pt}
+\begin{tabular}{lllrr}
+  \hline
+  Context & Sentence type & Truth Value &  Mean & Std. Dev. \\ 
+  \hline
+  None & Positive & True & 6.68  & 0.54\\ 
+  None & Positive & False &  1.62 & 1.32\\ 
+  None & Negative & True &  5.31 & 1.52 \\ 
+  None & Negative & False & 1.74  &1.55 \\ 
+  Foil & Positive & True & 6.63  & 0.59\\ 
+  Foil & Positive & False & 1.73  & 1.52\\ 
+  Foil & Negative & True &  5.40 & 1.42 \\ 
+  Foil & Negative & False & 1.70  & 1.49\\ 
+  Target & Positive & True &  6.61 & 0.64 \\ 
+  Target & Positive & False & 1.72  & 1.53 \\ 
+  Target & Negative & True & 6.01  & 1.09 \\ 
+  Target & Negative & False & 1.71  & 1.44\\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}
 
 \begin{figure}
 \begin{center} 
@@ -187,7 +244,6 @@ We fit a linear mixed-effects model to true negative sentence ratings to test th
 In Experiment 2, negative sentences were rated as most felicitous in a context where all of the context characters possessed the negated object.  Negative sentences presented in a \emph{foil} context did not differ significantly from negative sentences in a \emph{none} context.  In the foil context, all characters (including the target character) had the same alternative object.  If the pragmatics of negation require the referent of a negative sentence to be the ``odd one out'' (e.g. lacking a feature that everyone else has), we would expect sentences presented in a \emph{foil} context to be rated lower than sentences presented in the \emph{none} context.  The fact that there was no difference between these two contexts suggests that this is not a necessary feature of a supportive pragmatic context for negation.   Instead, negation appears to be pragmatically licensed in contexts where the negative sentence is highly informative.  
 
 \section{Model}
-WHERE SHOULD THIS GO?  I'm actually a little ambivalent about including this, given that we're not sure it's totally the right model.  It's pretty clear from negatron that there's something more than just straightforward informativeness going on in that study, and the "uninformative context" we've selected here is the one that causes problems for the model in negatron (because it seems like there's something like "relevance" happening, too).  If we cut it, I could spend more time in the GD discussing negatron and what we think is going on there?
 
 Both of the preceding studies found a significant effect of context on participants' ratings of true negative sentences.  Why does context have this effect on negative sentences?  One hypothesis is that felicity ratings are influenced by the \emph{informativeness} of negative sentences. On theories of pragmatics, speakers should produce sentences that are appropriately informative based on the context.  In a context where most characters have apples and one does not, it is informative to mention the latter character's lack of apples, because this feature is unique to the character being described.
 
@@ -213,15 +269,16 @@ To simplify the experiment for children, we focused on alternative negation and 
 
 \subsubsection{Participants}
 
-Families visiting Children's Discovery Museum (CDM) in San Jose, CA were invited to participate in this study. Because our mission at CDM is to recruit a diverse sample of families, we used preset criteria for inclusion in the final sample but recruited inclusively regardless of language background.  We also recruited from a broad range of ages, setting a target of 32 included children per age group (three-, and four-year-olds) and ending data collection once this minimum had been reached in all groups after the rejection criteria were applied. 
+Families visiting Children's Discovery Museum (CDM) in San Jose, CA were invited to participate in this study. Because our mission at CDM is to recruit a diverse sample of families, we used preset criteria for inclusion in the final sample but recruited inclusively regardless of language background.  We also recruited from a broad range of ages, setting a target of 32 included children per age group (three-, and four-year-olds) and ending data collection once this minimum had been reached in all groups after the rejection criteria were applied. In exchange for participation, children were given a sticker and a certificate.
 
-Fourteen children were excluded for being outside the target age range (between three and five years old).  An additional sixteen children were excluded whose parents indicated that they were exposed to English less than 75\% of the time.  One child was excluded for parental interference during the task.  Twelve children declined to continue the experiment after going through the instructions and practice trials, and five additional children were excluded for completing fewer than half of the trials.  This resulted in a sample of 77 children,  39 three-year-olds (mean age = 3;5, range = 3;0 -- 3;11, 22 female), and 38 four-year-olds (mean age = 3;5, range = 4;0 -- 4;11, 18 female).  In exchange for participation, children were given a sticker and a certificate.  
+Fourteen children were excluded for being outside the target age range (between three and five years old).  An additional sixteen children were excluded whose parents indicated that they were exposed to English less than 75\% of the time.  One child was excluded for parental interference during the task.  Twelve children declined to continue the experiment after going through the instructions and practice trials, and five additional children were excluded for completing fewer than half of the trials.  
+
+Children who failed to understand the scale, based on their performance on positive sentences, were rejected from the analysis.  Children's responses to true positive sentences were coded as correct if they chose a happy face on the scale (4 or 5), and children's responses to false positive sentences were coded as correct if they chose a sad face on the scale (1 or 2).  Children who chose an incorrect response on more than 2 trials were rejected from analysis.  Eight children were rejected based on this criteria, four three-year-olds and four four-year-olds.   This left a total of 69 children whose data was analyzed: 35 three-year-olds  (mean age = 3;7, range = 3;0 -- 3;11, 20 female and fifteen male) and 34 four-year-olds (mean age = 4;5, range = 4;0 -- 4;11, 17 female and 17 male).  
+
 
 \subsubsection{Stimuli}
 
 Trials in Experiment 3 had the same structure as trials in the alternative/target and alternative/none conditions of Experiments 1 and 2 (see \ref{fig:trial}), but with only 16 trials.  As in Experiment 2, all negative sentences were of the form ``[character] doesn't have a/an [object].''  Each child evaluated four true positive, two false positive, two false negative, and eight true negative trials.  Context was a between-subjects factor, so with each child viewing trials with either a target context or none context.  
-
-\vspace{.2cm}
 
 \subsubsection{Procedure}
 
@@ -233,15 +290,32 @@ Once the children completed the instructions phase, they were given a chance to 
 
 During the main experiment, trials proceeded in the same way as the practice trials, but the experimenter no longer drew children's attention to every context character.  The experimenter would point to the target character and say, ``Here's Abby!  Let's hear what Furble has to say about Abby.'' Children were then encouraged to make a response.  If children produced a word (i.e. ``good'' or ``silly''), but did not make a response, they were reminded again about which face to choose for good or silly sentences.  If children paused for more than five seconds, they were asked if they wanted to hear the sentence again.  After each trial, a star appeared at the top of the screen, serving as a progress bar.  At the end of the experiment, a large smiley face appeared and children were thanked for helping Furble.  
 
-\vspace{.2cm}
-
-\subsubsection{Data Processing}
-
-Children who failed to understand the scale, based on their performance on positive sentences, were rejected from the analysis.  Children's responses to true positive sentences were coded as correct if they chose a happy face on the scale (4 or 5), and children's responses to false positive sentences were coded as correct if they chose a sad face on the scale (1 or 2).  Children who chose an incorrect response on more than 2 trials were rejected from analysis.  Eight children were rejected based on this criteria, four three-year-olds and four four-year-olds.   This left a total of 69 children whose data was analyzed: 35 three-year-olds   and 34 four-year-olds. 
-
 \subsection{Results and Discussion}
 
-Children in the \emph{target} context rated true negative sentences significantly higher than children in the \emph{none} context, supporting our hypothesis that children are sensitive to the felicity of negation in different contexts.  Children rated false negative sentences significantly lower than true negative sentences in both context conditions, suggesting that children in both conditions heard and processed the negation correctly, even when they rated true negative sentences as ``very silly/a mistake'' (see Figure \ref{fig:childmeans}). 
+As with adults, children rated true sentences significantly higher than false sentences, indicating that the children in this sample were using the scale correctly.  Children's ratings for positive sentences were higher than their ratings for negative sentences, though this is likely due partially to the fact that they were trained on positive sentences and partially to the context effects described below.
+
+Focusing on children's performance on negative sentences, children in the \emph{target} context rated true negative sentences significantly higher than children in the \emph{none} context, supporting our hypothesis that children are sensitive to the felicity of negation in different contexts.  Children rated false negative sentences significantly lower than true negative sentences in both context conditions, suggesting that children in both conditions heard and processed the negation correctly, even when they rated true negative sentences as ``very silly/a mistake'' (see Figure \ref{fig:childmeans}). 
+
+\begin{table}[t]
+\caption{\label{tab:m2} Children's mean felicity rating for different trial types in Experiment 3, based on ratings given on a 5-point scale.}
+\begin{center}
+\small\addtolength{\tabcolsep}{-5pt}
+\begin{tabular}{lllrr}
+  \hline
+  Context & Sentence type & Truth Value &  Mean & Std. Dev. \\ 
+  \hline
+  None & Positive & True & 4.59  & 0.70\\ 
+  None & Positive & False &  1.77 & 1.04\\ 
+  None & Negative & True &  2.72 & 1.44 \\ 
+  None & Negative & False & 1.96  &1.23 \\ 
+  Target & Positive & True &  4.61 & 0.57\\ 
+  Target & Positive & False & 1.48  & 0.83 \\ 
+  Target & Negative & True & 3.58  & 1.37 \\ 
+  Target & Negative & False & 2.18  & 1.38\\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}
 
 \begin{figure}
 \begin{center} 
@@ -280,37 +354,37 @@ A linear mixed-effects model that included children's age group did not yield a 
 \end{center} 
 \end{figure}
 
-\begin{figure}
-\begin{center} 
-\includegraphics[width=5in]{figures/propcorrect.png}
-\caption{\label{fig:propcorrect} Proportion ``correct'' responses by age, truth value, and condition.  Responses to true negatives were coded as ``correct'' if children chose a happy face (4 or 5), and responses to false negatives were coded as ``correct'' if children chose a sad face (1 or 2).  Three-year-olds are shown above, and four-year-olds are shown below.  Responses to true negatives are on the left, and responses to false negatives are on the right.  }
-\end{center} 
-\end{figure}
+%\begin{figure}
+%\begin{center} 
+%\includegraphics[width=5in]{figures/propcorrect.png}
+%\caption{\label{fig:propcorrect} Proportion ``correct'' responses by age, truth value, and condition.  Responses to true negatives were coded as ``correct'' if children chose a happy face (4 or 5), and responses to false negatives were coded as ``correct'' if children chose a sad face (1 or 2).  Three-year-olds are shown above, and four-year-olds are shown below.  Responses to true negatives are on the left, and responses to false negatives are on the right.  }
+%\end{center} 
+%\end{figure}
 
-\begin{table}[t]
-\caption{\label{tab:s3.2} Coefficient estimates from a mixed-effects model predicting proportion correct responses to negative sentences in Experiment 3.}
-\begin{center}
-\small\addtolength{\tabcolsep}{-5pt}
-\begin{tabular}{rrrrr}
-  \hline
- & Coefficient & Std. err. & z value & p|z| \\ 
-  \hline
-(Intercept) & 3.37 & 0.68 & 4.99 & $<$.001\\ 
-  Context (target) & -1.31 & 0.82 & -1.60 & 0.11 \\ 
-  Truth Value (True) & -4.27 & 0.57 & -7.55 & $<$.001\\
-  Age group (Four-year-olds) & -0.39 & 0.61 & -0.63 & 0.53 \\
-  Context$\times$Truth Value & 3.15 & 0.69 & 4.55 & $<$.001 \\
-   \hline
-\end{tabular}
-\end{center}
-\end{table}
+%\begin{table}[t]
+%\caption{\label{tab:s3.2} Coefficient estimates from a mixed-effects model predicting proportion correct responses to negative sentences in Experiment 3.}
+%\begin{center}
+%\small\addtolength{\tabcolsep}{-5pt}
+%\begin{tabular}{rrrrr}
+%  \hline
+% & Coefficient & Std. err. & z value & $p|z|$ \\ 
+%  \hline
+%(Intercept) & 3.37 & 0.68 & 4.99 & $<$.001\\ 
+%  Context (target) & -1.31 & 0.82 & -1.60 & 0.11 \\ 
+%  Truth Value (True) & -4.27 & 0.57 & -7.55 & $<$.001\\
+%  Age group (Four-year-olds) & -0.39 & 0.61 & -0.63 & 0.53 \\
+%  Context$\times$Truth Value & 3.15 & 0.69 & 4.55 & $<$.001 \\
+%   \hline
+%\end{tabular}
+%\end{center}
+%\end{table}
 
-(NOTE: I'm feeling ambivalent about whether this is worth including...it feels kind of repetitive?  Also, if I do this here, should I do the same analysis for adults, for the sake of consistency?)
-Although we described our scale as measuring felicity, anchoring the endpoints of the scale at ``good'' vs. ``silly/a mistake'' instead of ``right'' vs. ``wrong'', it is possible to view children's responses as ``correct'' based purely on the truth value of the sentence.  In our adult data, adults nearly always placed even infelicitous true negative sentences on the high side of the scale, and reserved the lower end of the scale for sentences that were overtly false.  We re-coded our data to reflect whether children's responses were ``correct'' based on truth value, with true negatives coded as correct if children chose a happy face on the scale (a 4 or a 5), and false negatives coded as correct if children chose a sad face on the scale (a 1 or a 2).  A plot of mean proportion correct for true and false sentences by context condition and age group is shown in Figure \ref{fig:propcorrect}.   Children in both age groups were significantly more likely to respond to false negative sentences correctly compared to true negative sentences, consistent with the finding that context influences responses to true negative sentences more than it influences responses to false negative sentences.  For true negative sentences, children were significantly more likely to respond correctly to true negative sentences in the target context compared to the none context.  This effect was more pronounced amongst four-year-olds, with four-year-olds' responses to true negatives hovering around floor in the none condition.  
+%(NOTE: I'm feeling ambivalent about whether this is worth including...it feels kind of repetitive?  Also, if I do this here, should I do the same analysis for adults, for the sake of consistency?)
+%Although we described our scale as measuring felicity, anchoring the endpoints of the scale at ``good'' vs. ``silly/a mistake'' instead of ``right'' vs. ``wrong'', it is possible to view children's responses as ``correct'' based purely on the truth value of the sentence.  In our adult data, adults nearly always placed even infelicitous true negative sentences on the high side of the scale, and reserved the lower end of the scale for sentences that were overtly false.  We re-coded our data to reflect whether children's responses were ``correct'' based on truth value, with true negatives coded as correct if children chose a happy face on the scale (a 4 or a 5), and false negatives coded as correct if children chose a sad face on the scale (a 1 or a 2).  A plot of mean proportion correct for true and false sentences by context condition and age group is shown in Figure \ref{fig:propcorrect}.   Children in both age groups were significantly more likely to respond to false negative sentences correctly compared to true negative sentences, consistent with the finding that context influences responses to true negative sentences more than it influences responses to false negative sentences.  For true negative sentences, children were significantly more likely to respond correctly to true negative sentences in the target context compared to the none context.  This effect was more pronounced amongst four-year-olds, with four-year-olds' responses to true negatives hovering around floor in the none condition.  
 
-We fit a binomial mixed-effects model to explore the effects of context, truth value, and age group on correct responses.\footnote{ The model specification was as follows: \texttt{correct $\sim$ context~$\times$~truth~$+$~age.group + (1~\textbar~subject) +  (1~\textbar~item)}} Once again, we did not see a significant main effect of age group ($\beta= .74$, $p< .001$) (NOTE: The model with agegroup as part of a 3-way interaction does not converge, but it does show a marginal effect of age group, and a marginal 3-way interaction.  Should I mention this?  Should I ignore it, because it doesn't converge??)  We found a significant effect of truth value, with children responding correctly to false sentences more often than they responded correctly to true sentences.  We also found a significant interaction between context and truth value, such that children were significantly more likely to respond correctly to true negative sentences in the target condition compared to the none condition.  
+%We fit a binomial mixed-effects model to explore the effects of context, truth value, and age group on correct responses.\footnote{ The model specification was as follows: \texttt{correct $\sim$ context~$\times$~truth~$+$~age.group + (1~\textbar~subject) +  (1~\textbar~item)}} Once again, we did not see a significant main effect of age group ($\beta= .74$, $p< .001$) (NOTE: The model with agegroup as part of a 3-way interaction does not converge, but it does show a marginal effect of age group, and a marginal 3-way interaction.  Should I mention this?  Should I ignore it, because it doesn't converge??)  We found a significant effect of truth value, with children responding correctly to false sentences more often than they responded correctly to true sentences.  We also found a significant interaction between context and truth value, such that children were significantly more likely to respond correctly to true negative sentences in the target condition compared to the none condition.  
 
-Together these results suggest a pronounced effect of context on children's responses to true negative sentences.  Three- and four-year-olds combined rated true negative sentences higher in the target context, and were significantly more likely to respond ``incorrectly'' to true negative sentences in the none context compared to the target context.  Children did not have difficulty with false negative sentences, suggesting that their performance in response to true negative sentences is not due to confusion about how negation works or difficulty processing negation, but rather a sensitivity to the pragmatics of negation.  Similar to adults, children found true negative sentences to be ``silly'' or a mistake when they were produced in the absence of an informative context, but were more likely to say that the same sentences were ``good'' in an informative context, suggesting that children's responses to these sentences is due to their sensitivity to pragmatics, rather than a difficulty specific to negation.  
+Together these results suggest a pronounced effect of context on children's responses to true negative sentences.  Three- and four-year-olds combined rated true negative sentences higher in the target context.  Children did not have difficulty with false negative sentences, suggesting that their performance in response to true negative sentences is not due to confusion about how negation works or difficulty processing negation, but rather a sensitivity to the pragmatics of negation.  Similar to adults, children found true negative sentences to be ``silly'' or a mistake when they were produced in the absence of an informative context, but were more likely to say that the same sentences were ``good'' in an informative context, suggesting that children's responses to these sentences is due to their sensitivity to pragmatics, rather than a difficulty specific to negation.  
 
 
 \section{General Discussion}
