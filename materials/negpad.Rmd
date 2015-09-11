@@ -1,0 +1,557 @@
+---
+output: html_document
+author: AEN and MCF
+title: Neg-tablet Analyses
+---
+
+Prelims and libraries.
+
+```{r}
+rm(list = ls())
+#Load libraries
+library(reshape2)
+library(dplyr)
+library(ggplot2)
+library(bootstrap)
+library(lme4)
+```
+Functions and add some style elements for ggplot2
+
+```{r}
+## number of unique subs
+n.unique <- function (x) {
+  length(unique(x))
+}
+
+## for bootstrapping 95% confidence intervals
+theta <- function(x,xdata) {mean(xdata[x])}
+ci.low <- function(x) {
+  quantile(bootstrap(1:length(x), 1000, theta, x)$thetastar, .025)}
+ci.high <- function(x) {
+  quantile(bootstrap(1:length(x), 1000, theta, x)$thetastar, .975)}
+
+plot.style <- theme_bw() + 
+  theme(panel.grid.minor = element_blank(), 
+        panel.grid.major = element_blank(), 
+        legend.position = "right", 
+        axis.line = element_line(colour = "black",size = .5), 
+        axis.ticks = element_line(size = .5), 
+        axis.title.x = element_text(vjust = -.5), 
+        axis.title.y = element_text(angle = 90,vjust = 0.25))
+```
+
+
+## Experiment 1: Adults, between-subjects, referent type & syntactic frame
+
+Load in data
+
+```{r}
+d.exp1 <- read.csv("data/exp1.csv")
+d.exp1$condition <- factor(d.exp1$condition, 
+                           levels = c("noContext", "context"), 
+                           labels = c("None", "Target"))
+d.exp1$sentence.type <- factor(d.exp1$sentence.type, 
+                               levels = c("positive", "negative"), 
+                               labels = c("Positive" , "Negative"))
+
+d.exp1$neg.concept <- factor(d.exp1$neg.concept, 
+                             levels = c("something", "nothing"),
+                             labels = c("Alternative",  "Nonexistence"))
+
+d.exp1$neg.syntax <- factor(d.exp1$neg.syntax, 
+                            levels = c("", "has no", "doesn't have"), 
+                            labels = c("", "has no X", "doesn't have X"))
+```
+
+### Plot data
+
+Histogram of rating scale: 
+
+```{r}
+qplot(d.exp1$rating, geom = "histogram") + plot.style
+```
+
+Plot mean ratings for every trial type:
+
+```{r}
+ms <- d.exp1 %>%
+  group_by(subid, condition, sentence.type, truth.value, neg.concept, neg.syntax) %>%
+  summarise(subm = mean(rating)) %>%
+  group_by(condition, sentence.type, truth.value, neg.concept, neg.syntax) %>%
+  summarise(rating = mean(subm),
+            high = ci.high(subm),
+            low = ci.low(subm))
+ms$truth.value <- factor(ms$truth.value, levels=c(TRUE, FALSE), labels=c("True","False"))
+
+qplot(data = ms, x = sentence.type, y = rating, 
+      color = neg.concept, shape = neg.syntax, 
+      geom = "point", stat = "identity", position = position_dodge(width = .5), 
+      facets = ~ truth.value~condition) + 
+  geom_errorbar(aes(ymin = low, ymax = high), width = 0,
+                position = position_dodge(width = .5)) + 
+  plot.style
+```
+
+Just look at negative sentences:
+
+```{r}
+d.exp1.neg <- filter(d.exp1, sentence.type == "Negative")
+
+ms <- d.exp1.neg %>%
+  group_by(subid, condition, truth.value, neg.concept, neg.syntax) %>%
+  summarise(subm = mean(rating)) %>%
+  group_by(condition, truth.value, neg.concept, neg.syntax) %>%
+  summarise(rating = mean(subm),
+            high = ci.high(subm),
+            low = ci.low(subm))
+ms$truth.value <- factor(ms$truth.value, levels=c(TRUE, FALSE), labels=c("True","False"))
+
+qplot(data = ms, x = condition, y = rating, fill = neg.concept, 
+      geom = "bar", stat = "identity", position = "dodge", 
+      facets = truth.value~neg.syntax) + 
+  geom_errorbar(aes(ymin = low, ymax = high), width = 0,
+                position = position_dodge(width = .9)) + 
+  scale_fill_grey("Negation Type") + 
+  xlab("Context") + ylab("Rating") + 
+  plot.style
+```
+
+Just look at true negatives:
+
+```{r}
+d.exp1.trueneg <- filter(d.exp1, sentence.type ==  "Negative" & truth.value == TRUE)
+
+ms <- d.exp1.trueneg %>%
+  group_by(subid, condition, neg.concept, neg.syntax) %>%
+  summarise(subm = mean(rating)) %>%
+  group_by(condition, neg.concept, neg.syntax) %>%
+  summarise(rating = mean(subm),
+            high = ci.high(subm),
+            low = ci.low(subm))
+
+qplot(data = ms, x = condition, y = rating, fill = neg.concept, 
+      geom = "bar", stat = "identity", position = "dodge", 
+      facets = ~neg.syntax) + 
+  geom_errorbar(aes(ymin = low, ymax = high), width = 0,
+                position = position_dodge(width = .9)) + 
+  scale_fill_grey("Negation Type") + 
+  xlab("Context") + ylab("Rating") + 
+  plot.style
+
+```
+
+### Statistical models: 
+
+All data: 
+```{r}
+model.exp1.all <- lmer(rating ~ sentence.type * condition * truth.value +
+                         (sentence.type * truth.value | subid) +
+                         (sentence.type * truth.value | item), 
+                       data = d.exp1)
+summary(model.exp1.all)
+```
+
+Just negative sentences: 
+```{r}
+model.exp1.neg <- lmer(rating ~ condition * truth.value +
+                         (truth.value | subid) + 
+                         (condition * truth.value | item), 
+                       data = d.exp1.neg)
+summary(model.exp1.neg)
+```
+
+Just true negative sentences: 
+```{r}
+model.exp1.trueneg <- lmer(rating ~ condition * neg.concept * neg.syntax +
+                             (neg.concept * neg.syntax | subid) + 
+                             (neg.concept * neg.syntax | item), 
+                           data = d.exp1.trueneg)
+summary(model.exp1.trueneg)
+```
+
+## Experiment 2: Adults, within-subjects, foil context
+
+Load in data
+
+```{r}
+d.exp2 <- read.csv("data/exp2.csv")
+d.exp2$sentence.type <- factor(d.exp2$sentence.type, 
+                               levels = c("positive", "negative"), 
+                               labels = c("Positive", "Negative"))
+d.exp2$condition <- factor(d.exp2$condition, 
+                           levels = c("none", "foil", "target"), 
+                           labels = c("None", "Foil", "Target"))
+```
+
+### Plot data
+
+Histogram of rating scale: 
+
+```{r}
+qplot(d.exp2$rating, geom = "histogram") + plot.style
+```
+
+Plot mean ratings for every trial type:
+
+```{r}
+ms <- d.exp2 %>%
+  group_by(subid, condition, sentence.type, truth.value) %>%
+  summarise(subm = mean(rating)) %>%
+  group_by(condition, sentence.type, truth.value) %>%
+  summarise(rating = mean(subm),
+            high = ci.high(subm),
+            low = ci.low(subm))
+ms$truth.value <- factor(ms$truth.value, levels=c(TRUE, FALSE), labels=c("True","False"))
+
+qplot(data = ms, x = condition, y = rating, fill = sentence.type, 
+      geom = "bar", stat = "identity", position = position_dodge(width = .95), 
+      facets = ~truth.value) + 
+  geom_errorbar(aes(ymin = low, ymax = high), width = 0,
+                position = position_dodge(width = .95)) + 
+  scale_fill_grey() + 
+  plot.style
+```
+
+Just look at true negatives:
+
+```{r}
+d.exp2.trueneg <- filter(d.exp2, sentence.type ==  "Negative" & truth.value ==  TRUE)
+
+ms <- d.exp2.trueneg %>%
+  group_by(subid, condition) %>%
+  summarise(subm = mean(rating)) %>%
+  group_by(condition) %>%
+  summarise(rating = mean(subm),
+            high = ci.high(subm),
+            low = ci.low(subm))
+
+qplot(data = ms, x = condition, y = rating, 
+      geom = "bar", stat = "identity", position = "dodge") + 
+  geom_errorbar(aes(ymin = low, ymax = high), width = 0,
+                position = position_dodge(width = .9)) + 
+  scale_fill_grey() + 
+  xlab("Context") + ylab("Rating") + 
+  coord_equal(1/1.5) +
+  plot.style
+```
+
+### Statistical models: 
+
+All data: 
+
+```{r}
+model.exp2.all <- lmer(rating ~ condition * sentence.type * truth.value +
+                         (sentence.type * truth.value | subid) +
+                         (sentence.type * truth.value | item),
+                       data = d.exp2)
+summary(model.exp2.all)
+```
+
+Just negative sentences: 
+```{r}
+model.exp2.neg <- lmer(rating ~ condition * truth.value +
+                         (truth.value | subid) +
+                         (truth.value | item), 
+                       data = filter(d.exp2, sentence.type == "Negative"))
+summary(model.exp2.neg)
+```
+
+Just true negative sentences: 
+```{r}
+model.exp2.trueneg <- lmer(rating ~ condition +
+                             (1 | subid) +
+                             (1 | item), 
+                           data = d.exp2.trueneg)
+summary(model.exp2.trueneg)
+```
+
+## Model comparison
+```{r}
+source("model/model.R")
+source("model/simulations.R")
+
+qplot(data=subset(probs, truth.value=="True" & word=="negative"), 
+      x=context, y=p.word, fill=negation.type,
+      geom="bar", stat="identity", position="dodge") + 
+  facet_grid(.~experiment, scales="free") +
+  #ggtitle("Model predictions") + 
+  scale_fill_grey("Negation Type") + 
+  xlab("Context") + ylab("Model Probabilities") + 
+  plot.style
+```
+
+## Experiment 3: Children, between subjects, none vs. target context
+
+Load in data.
+
+```{r}
+d.exp3 <- read.csv("data/exp3.csv")
+
+d.exp3$agegroup <- factor(d.exp3$agegroup)
+
+d.exp3$sent.type <- factor(d.exp3$sent.type, 
+                           levels = c("positive", "negative"), 
+                           labels = c("Positive", "Negative"))
+
+d.exp3$condition <- factor(d.exp3$condition, 
+                           labels = c("None", "Target"))
+```
+
+Condense scale from 5-point to 3-point
+
+```{r}
+d.exp3$resp2 <- 2
+d.exp3[d.exp3$resp > 3,]$resp2 <- 3
+d.exp3[d.exp3$resp < 3,]$resp2 <- 1
+d.exp3$resp2 <- factor(d.exp3$resp2)
+```
+
+### Participant exclusions
+
+Exclude subjects who didn't complete at least half of the trials
+
+```{r}
+#Reject children who didn't complete at least 8 trials
+ntrials <- d.exp3 %>%
+  group_by(subid) %>%
+  summarize(ntrials = n()) %>%
+  filter(ntrials < 8)
+
+for (i in ntrials$subid) {
+  d.exp3 <- filter(d.exp3, subid != i)
+}
+```
+
+Reject subjects who don't understand scale (based on positive sentences):
+
+```{r}
+reject <- d.exp3 %>%
+  filter(sent.type == "Positive") %>% #Only look at positive sentences
+  group_by(subid) %>%
+  mutate(total = n()) %>% #get total # of positive sentences child saw
+  group_by(subid, condition, truth, total, resp2) %>%
+  filter((truth == "True" & resp2 == 3) | (truth == "False" & resp2 == 1)) %>% #Get # "good" for true pos and "bad" for false pos
+  summarize(counts = n()) %>% 
+  group_by(subid, condition, total) %>%
+  summarize(counts = sum(counts)) %>% #total # "correct" responses
+  mutate(prop = counts/total) %>% #proportion correct
+  filter(prop < .6) #reject kids who got < .6 "correct" (this allows for 2/6 "mistakes")
+
+for (i in reject$subid) {
+  d.exp3 <- filter(d.exp3, subid != i)
+}
+```
+
+Make sure there aren't any kids who just used one side of scale. Reject kids who only chose a single data point
+
+```{r}
+scaleUse <- aggregate(resp2 ~ subid, d.exp3, n.unique)
+table(scaleUse$resp2) #Are any resp2 = 1
+```
+
+### Plot data, all ages
+
+Categorize kids based on response type
+
+```{r}
+tn_responses <- d.exp3 %>%
+  filter(sent.type == "Negative" & truth == "True") %>%
+  group_by(subid) %>%
+  mutate(total = n()) %>%
+  group_by(subid, condition, total, resp2) %>%
+  summarize(counts = n()) %>%
+  mutate(prop = counts/total)
+
+category <- dcast(tn_responses, subid + condition ~ resp2)
+names(category) <- c("subid","condition","bad","neutral","good")
+category[is.na(category)] <- 0
+
+category$type <- "other"
+#category[category$neutral > .6,]$type <- "tn_neutral"
+category[category$bad > .6,]$type <- "tn_bad"
+category[category$good > .6,]$type <- "tn_good"
+
+cat_counts <- category %>%
+  group_by(condition, type) %>%
+  summarise(counts = n())
+
+cat_counts$type <- factor(cat_counts$type, levels = c("tn_bad","tn_good","other"), labels = c("True Negatives = Bad", "True Negatives = Good", "Inconsistent/Other"))
+
+qplot(data = cat_counts, x = condition, y = counts, fill = type, 
+      stat = "identity", position = "dodge", geom = "bar") + 
+  scale_fill_hue("Response Type") +
+  ylab("Count") + xlab("Context Condition") +
+  plot.style
+```
+
+Mean responses to all sentences:
+
+```{r}
+ms <- d.exp3 %>%
+  group_by(subid, condition, sent.type, truth) %>%
+  summarise(subm = mean(resp)) %>%
+  group_by(condition, sent.type, truth) %>%
+  summarise(m = mean(subm),
+            cih = ci.high(subm),
+            cil = ci.low(subm))
+ms$truth <- factor(ms$truth, levels=c("True","False"))
+
+qplot(data = subset(ms), 
+      x = condition, y = m, fill =  sent.type, facets = ~ truth,
+      stat = "identity", position = "dodge", geom = "bar") +
+  geom_errorbar(aes(ymin = cil, ymax = cih), 
+                position = position_dodge(.9), width = 0) + 
+  scale_fill_grey("") +
+  xlab("Context") + ylab("Response") +
+  scale_y_continuous(limits = c(0, 5), breaks = seq(1,5,1)) +
+  plot.style
+```
+
+Just negative trials:
+
+```{r}
+qplot(data = subset(ms, sent.type == "Negative"), 
+      x = condition, y = m, facets = ~ truth,
+      stat = "identity", position = "dodge", geom = "bar") +
+  geom_errorbar(aes(ymin = cil, ymax = cih), 
+                position = position_dodge(.9), width = 0) + 
+  scale_fill_grey("") +
+  xlab("Context") + ylab("Response") +
+  scale_y_continuous(limits = c(0, 5), breaks = seq(1,5,1)) +
+  plot.style
+```
+
+Histogram of trial ratings: 
+
+```{r}
+truenegs <- filter(ms, truth == "True" & sent.type ==  "Negative")
+
+#make df for histogram (for formatting reasons)
+hist_data <- d.exp3 %>%
+  filter(truth == "True" & sent.type == "Negative") %>%
+  group_by(condition, resp) %>%
+  summarise(count = n())
+
+qplot(data = hist_data, y = count, x = resp, 
+      fill = condition, width = .5, 
+      geom = "bar", position = position_dodge(.6), stat = "identity") + 
+  geom_point(data = truenegs, aes(x = m, y = c(44, 46), color = condition)) + 
+  geom_segment(data = truenegs, aes(x = cil, xend = cih, y = c(44, 46), yend = c(44, 46), color = condition)) + 
+  scale_fill_grey("Condition") + scale_color_grey("Condition") +
+  xlab("Response") + ylab("Count") +
+  plot.style
+```
+
+### Plot data, broken down by age 
+
+Mean responses to negative sentences:
+
+```{r}
+ms <- d.exp3 %>%
+  group_by(subid, agegroup, condition, sent.type, truth) %>%
+  summarise(subm = mean(resp)) %>%
+  group_by(condition, agegroup, sent.type, truth) %>%
+  summarise(m = mean(subm),
+            cih = ci.high(subm),
+            cil = ci.low(subm))
+ms$truth <- factor(ms$truth, levels=c("True","False"))
+
+qplot(data = subset(ms, sent.type == "Negative"), 
+      x = condition, y = m, facets = agegroup~truth,
+      stat = "identity", position = "dodge", geom = "bar") +
+  geom_errorbar(aes(ymin = cil, ymax = cih), 
+                position = position_dodge(.9), width = 0) + 
+  scale_fill_grey("") +
+  xlab("Context") + ylab("Response") +
+  scale_y_continuous(limits = c(0, 5), breaks = seq(1,5,1)) +
+  plot.style
+```
+
+Histogram of responses
+
+Three-year-olds:
+
+```{r}
+ms <- d.exp3 %>%
+  group_by(subid, agegroup, condition, sent.type, truth) %>%
+  summarise(subm = mean(resp)) %>%
+  group_by(condition, agegroup, sent.type, truth) %>%
+  summarise(m = mean(subm),
+            cih = ci.high(subm),
+            cil = ci.low(subm))
+
+trueneg_3s <- filter(ms, truth == "True" & sent.type ==  "Negative" & agegroup ==  "3")
+
+hist_data_3s <- d.exp3 %>%
+  filter(truth == "True" & sent.type == "Negative" & agegroup == "3") %>%
+  group_by(condition, resp) %>%
+  summarise(count = n())
+
+qplot(data = hist_data_3s, y = count, x = resp, 
+      fill = condition, width = .5, 
+      geom = "bar", position = position_dodge(.6), stat = "identity") +
+  geom_point(data = trueneg_3s, aes(x = m, y = c(40, 42), color = condition)) +
+  geom_segment(data = trueneg_3s, aes(x = cil, xend = cih, y = c(40, 42), yend = c(40, 42), color = condition)) + 
+  scale_fill_grey("Condition") + scale_color_grey("Condition") +
+  xlab("Response") + ylab("Count") +
+  ylim(c(0, 90)) + 
+  plot.style
+```
+
+Four-year-olds: 
+
+```{r}
+trueneg_4s <- filter(ms, truth == "True" & sent.type ==  "Negative" & agegroup ==  "4")
+
+hist_data_4s <- d.exp3 %>%
+  filter(truth == "True" & sent.type == "Negative" & agegroup == "4") %>%
+  group_by(condition, resp) %>%
+  summarise(count = n())
+
+qplot(data = hist_data_4s, y = count, x = resp, 
+      fill = condition, width = .5, 
+      geom = "bar", position = position_dodge(.6), stat = "identity") +
+  geom_point(data = trueneg_4s, aes(x = m, y = c(40, 42), color = condition)) +
+  geom_segment(data = trueneg_4s, aes(x = cil, xend = cih, y = c(40, 42), yend = c(40, 42), color = condition)) + 
+  scale_fill_grey("Condition") + scale_color_grey("Condition") +
+  xlab("Response") + ylab("Count") +
+  ylim(c(0, 90)) + 
+  plot.style
+```
+
+
+### Statistical models
+
+Basic continuous models:
+
+```{r}
+model.noage <- lmer(resp ~ condition * truth  + (1|subid) 
+                    + (1|item), 
+                    data = filter(d.exp3, sent.type ==  "Negative"))
+summary(model.noage)
+
+model.age <- lmer(resp ~ condition * agegroup * truth  + (1|subid) 
+                  + (1|item), 
+                  data = filter(d.exp3, sent.type ==  "Negative"))
+summary(model.age)
+
+anova(model.age, model.noage)
+
+```
+
+T-tests by age group:
+
+```{r}
+#Three-year-olds
+threes <- filter(d.exp3, agegroup ==  "3")
+threes_subs <- aggregate(resp ~ subid + condition, threes, mean)
+t.test(resp ~ condition, threes_subs)
+
+#Four-year-olds
+fours <- filter(d.exp3, agegroup ==  "4")
+fours_subs <- aggregate(resp ~ subid + condition, fours, mean)
+t.test(resp ~ condition, fours_subs)
+
+```
+
+
