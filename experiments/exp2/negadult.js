@@ -563,9 +563,9 @@ var experiment = {
 
 	end: function() {
 		showSlide("finished");
-
-		setTimeout(function() {
-			turk.submit(experiment, true);
-		}, 1500);
+		//no data collection for demo experiment
+		// setTimeout(function() {
+		// 	turk.submit(experiment, true);
+		// }, 1500);
 	}
 }
