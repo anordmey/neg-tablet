@@ -1,7 +1,31 @@
 \documentclass[man, noapacite]{apa2}
 
 % \usepackage{pslatex}
-\usepackage{hyperref}
+
+\usepackage[
+  breaklinks=true,
+  bookmarks=false,
+  pdfpagelabels=false,
+  hyperfootnotes=false,
+  hyperindex=false,
+  pageanchor=false,
+]{hyperref}
+
+\makeatletter
+\let\saved@hyper@linkurl\hyper@linkurl
+%\let\saved@hyper@linkfile\hyper@linkfile
+\let\saved@hyper@link@\hyper@link@
+\AtBeginDocument{%
+  % Since the whole document is affected, only the \begin part of
+  % environment `NoHyper' is needed.
+  \NoHyper
+  \let\hyper@linkurl\saved@hyper@linkurl % needed by \url
+  %\let\hyper@linkfile\saved@hyper@linkfile % needed by \href{<file>}
+  \let\hyper@link@\saved@hyper@link@ % needed by \href{<url>}
+}
+\makeatother
+
+
 \usepackage{pdfsync}
 \usepackage{apacite2}
 \usepackage{amsmath}
@@ -103,7 +127,7 @@ A slider bar was positioned beneath the sentence, with a seven-point scale rangi
 
 \subsubsection{Procedure}
 
-Participants first saw an instructions screen that briefly described the task and informed them that they could stop at any time. Once participants agreed to participate, they saw an instructions screen that explained the task in more detail. Participants were asked to rate how ``good'' each sentence was based on how a hypothetical speaker might behave, e.g., ``if no one would ever say a particular sentence in this context, or if it is just wrong, rank that as `Very Bad,' but if something is right and sounds perfectly normal, mark it as `Very Good.''' Participants were encouraged to use the entire scale. On each trial the pictures, sentence, and slider bar appeared simultaneously, and participants had to make a selection on the scale in order to progress to the next trial.\footnote{The experiment can be viewed at \url{https://langcog.stanford.edu/expts/AEN/negpad_verification/negadult.html}}
+Participants first saw an instructions screen that briefly described the task and informed them that they could stop at any time. Once participants agreed to participate, they saw an instructions screen that explained the task in more detail. Participants were asked to rate how ``good'' each sentence was based on how a hypothetical speaker might behave, e.g., ``if no one would ever say a particular sentence in this context, or if it is just wrong, rank that as `Very Bad,' but if something is right and sounds perfectly normal, mark it as `Very Good.''' Participants were encouraged to use the entire scale. On each trial the pictures, sentence, and slider bar appeared simultaneously, and participants had to make a selection on the scale in order to progress to the next trial.\footnote{The experiment can be viewed at \href{http://anordmey.github.io/neg-tablet/experiments/exp1/negadult.html}{\nolinkurl{http://anordmey.github.io/neg-tablet/experiments/exp1/negadult.html}}}.
 
 \subsection{Results and Discussion}
 
@@ -142,7 +166,7 @@ We focused our primary analysis on true negative sentences, because true negativ
 \end{center}
 \end{table}
 
-To test the reliability of these findings, we fit a linear mixed-effects model examining the interaction between context, referent type (e.g., nonexistence or alternative), and negation framing (e.g., ``has no X'' vs. ``doesn't have X'') on felicity ratings.\footnote{ The model specification was as follows: \texttt{rating $\sim$ context~$\times$~referent type~$\times$~negation frame + (referent type~$\times$~negation frame~\textbar~subject) + (referent type~$\times$~negation frame~\textbar~item)}. Significance was calculated using the standard normal approximation to the $t$ distribution \cite{barr2013}. Data and analysis code can be found at \href{http://github.com/anordmey/neg-tablet}{http://github.com/anordmey/neg-tablet}.} Because we were primarily interested in the effects of context on true negative sentences, we focused on these trials in our analyses, though the effects reported here are significant in full models of all sentence types as well.
+To test the reliability of these findings, we fit a linear mixed-effects model examining the interaction between context, referent type (e.g., nonexistence or alternative), and negation framing (e.g., ``has no X'' vs. ``doesn't have X'') on felicity ratings.\footnote{ The model specification was as follows: \texttt{rating $\sim$ context~$\times$~referent type~$\times$~negation frame + (referent type~$\times$~negation frame~\textbar~subject) + (referent type~$\times$~negation frame~\textbar~item)}. Significance was calculated using the standard normal approximation to the $t$ distribution \cite{barr2013}. Data and analysis code can be found at \href{http://github.com/anordmey/neg-tablet}{\nolinkurl{http://github.com/anordmey/neg-tablet}}.} Because we were primarily interested in the effects of context on true negative sentences, we focused on these trials in our analyses, though the effects reported here are significant in full models of all sentence types as well.
 
 Examining the model, we found a main effect of context, with true negative sentences presented in a target context eliciting significantly higher ratings than true negative sentences presented in a none context ($\beta= .82$, $p< .05$). We found main effects of referent type, with nonexistence negation receiving higher ratings than alternative negation ($\beta= .65$, $p< .01$), as well as a significant effect of negation framing, with sentences of the form ``doesn't have X'' receiving higher ratings than sentences of the form ``has no X'' ($\beta= .71$, $p< .01$). There were no interactions between negation frame, referent type, and context. 
 
@@ -203,7 +227,7 @@ In Experiment 2, context was a within-subjects factor with three levels. In the 
 
 \subsubsection{Procedure}
 
-The procedure was identical to Experiment 1.
+The procedure was identical to Experiment 1.\footnote{The experiment can be viewed at \href{http://anordmey.github.io/neg-tablet/experiments/exp2/negadult.html}{\nolinkurl{http://anordmey.github.io/neg-tablet/experiments/exp2/negadult.html}}.}
 
 \subsection{Results and Discussion}
 
@@ -295,16 +319,16 @@ Once this pre-training game was complete, children were introduced to the experi
 
 Once the children completed the instructions phase, they were given a chance to practice. The practice consisted of a true positive trial, two false positive trials, and a final true positive trial. On each trial, the four characters appeared and a red box appeared around the target character. The smiley-face scale appeared below the characters, and the target sentence was printed at the bottom of the page in small print for the experimenter to read (in the voice of the puppet). During the practice trials, the experimenter first identified the target character and then encouraged children to look at all of the other characters as well, e.g., ``See Abby? Here's Abby with all of her friends. Let's hear what Furble has to say about Abby.'' The puppet would then produce a sentence, and children were asked whether Furble had said something good or silly. During the practice trials, if children didn't make a response, or made an incorrect response, the experimenter explained the scale again until children made their own response spontaneously. After these four practice trials, children were asked if they wanted to continue to help the puppet learn, and children who agreed proceeded to the main experiment.
 
-During the main experiment, trials proceeded in the same way as the practice trials, but the experimenter no longer drew children's attention to every context character. The experimenter would point to the target character and say, ``Here's Abby! Let's hear what Furble has to say about Abby.'' Children were then encouraged to make a response. If children produced a word (i.e., ``good'' or ``silly''), but did not make a response, they were reminded again about which face to choose for good or silly sentences. If children paused for more than five seconds, they were asked if they wanted to hear the sentence again. After each trial, a star appeared at the top of the screen, serving as a progress bar. At the end of the experiment, a large smiley face appeared and children were thanked for helping Furble. 
+During the main experiment, trials proceeded in the same way as the practice trials, but the experimenter no longer drew children's attention to every context character. The experimenter would point to the target character and say, ``Here's Abby! Let's hear what Furble has to say about Abby.'' Children were then encouraged to make a response. If children produced a word (i.e., ``good'' or ``silly''), but did not make a response, they were reminded again about which face to choose for good or silly sentences. If children paused for more than five seconds, they were asked if they wanted to hear the sentence again. After each trial, a star appeared at the top of the screen, serving as a progress bar. At the end of the experiment, a large smiley face appeared and children were thanked for helping Furble.\footnote{The experiment can be viewed at \href{http://anordmey.github.io/neg-tablet/experiments/exp3/negkids.html}{\nolinkurl{http://anordmey.github.io/neg-tablet/experiments/exp3/negkids.html}}.} 
 
 \subsection{Results and Discussion}
 
-As with adults, children rated true sentences significantly higher than false sentences, indicating that the children in this sample were using the scale correctly. Children's ratings for positive sentences were higher than their ratings for negative sentences, though this is likely due partially to the fact that they were trained on positive sentences and partially to the context effects described below.
+As with adults, children rated true sentences significantly higher than false sentences, indicating that the children in this sample were using the scale correctly. Children's ratings for positive sentences were higher than their ratings for negative sentences, though this is likely due partially to the fact that they were trained on positive sentences and partially to the context effects described below (see Table \ref{tab:m3}).
 
 Focusing on children's performance on negative sentences, children in the target context rated true negative sentences significantly higher than children in the none context, supporting our hypothesis that children are sensitive to the felicity of negation in different contexts. Children rated false negative sentences significantly lower than true negative sentences in both context conditions, suggesting that children in both conditions heard and processed the negation correctly, even when they rated true negative sentences as ``very silly/a mistake'' (see Figure \ref{fig:childmeans}). 
 
 \begin{table}[t]
-\caption{\label{tab:m2} Children's mean felicity rating for different trial types in Experiment 3, based on ratings given on a 5-point scale.}
+\caption{\label{tab:m3} Children's mean felicity rating for different trial types in Experiment 3, based on ratings given on a 5-point scale.}
 \begin{center}
 \small\addtolength{\tabcolsep}{-5pt}
 \begin{tabular}{lllrr}
