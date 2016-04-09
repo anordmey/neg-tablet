@@ -14,6 +14,7 @@ library(dplyr)
 library(ggplot2)
 library(bootstrap)
 library(lme4)
+library(knitr)
 ```
 Functions and add some style elements for ggplot2
 
@@ -83,6 +84,8 @@ ms <- d.exp1 %>%
             low = ci.low(subm))
 ms$truth.value <- factor(ms$truth.value, levels=c(TRUE, FALSE), labels=c("True","False"))
 
+kable(ms, digits = 2)
+
 ggplot(data = ms, aes(x = sentence.type, y = rating, 
       color = neg.concept, shape = neg.syntax)) +
   geom_point(stat = "identity", position = position_dodge(width = .5)) + 
@@ -129,7 +132,7 @@ ms <- d.exp1.trueneg %>%
             high = ci.high(subm),
             low = ci.low(subm))
 
-ggplot(data = ms, aes(x = condition, y = rating, fill = neg.concept)) +
+ggplot(data = ms, aes(x = neg.concept, y = rating, fill = condition)) +
   geom_bar(stat = "identity", position = "dodge") +  
   facet_wrap(~ neg.syntax) + 
   geom_errorbar(aes(ymin = low, ymax = high), width = 0,
@@ -150,10 +153,11 @@ contrasts(d.exp1$condition) <- rbind(.5, -.5)
 contrasts(d.exp1$truth.value) <- rbind(.5, -.5)
 
 model.exp1.all <- lmer(rating ~ sentence.type * condition * truth.value +
-                         (1 + sentence.type * truth.value | subid) +
-                         (1 + sentence.type * truth.value | item), 
+                         (sentence.type * truth.value | subid) +
+                         (sentence.type * truth.value | item), 
                        data = d.exp1)
-summary(model.exp1.all)
+
+kable(summary(model.exp1.all)$coefficients, digits = 2)
 ```
 
 Just negative sentences: 
@@ -162,10 +166,11 @@ contrasts(d.exp1.neg$condition) <- rbind(.5, -.5)
 contrasts(d.exp1.neg$truth.value) <- rbind(.5, -.5)
 
 model.exp1.neg <- lmer(rating ~ condition * truth.value +
-                         (1 + truth.value | subid) + 
-                         (1 + condition * truth.value | item), 
+                         (truth.value | subid) + 
+                         (condition * truth.value | item), 
                        data = d.exp1.neg)
-summary(model.exp1.neg)
+
+kable(summary(model.exp1.neg)$coefficients, digits = 2)
 ```
 
 Just true negative sentences: 
@@ -175,10 +180,11 @@ contrasts(d.exp1.trueneg$neg.concept) <- rbind(.5, -.5)
 contrasts(d.exp1.trueneg$neg.syntax) <- cbind(rbind(.5, 0,-.5), rbind(0, .5, -.5))
 
 model.exp1.trueneg <- lmer(rating ~ condition * neg.concept * neg.syntax +
-                             (1 + neg.concept * neg.syntax | subid) + 
-                             (1 + neg.concept * neg.syntax | item), 
+                             (neg.concept * neg.syntax | subid) + 
+                             (neg.concept * neg.syntax | item), 
                            data = d.exp1.trueneg)
-summary(model.exp1.trueneg)
+
+kable(summary(model.exp1.trueneg)$coefficients, digits = 2)
 ```
 
 ## Experiment 2: Children, between subjects, none vs. target context
@@ -297,6 +303,8 @@ ms <- d.exp2 %>%
             cil = ci.low(subm))
 ms$truth <- factor(ms$truth, levels=c("True","False"))
 
+kable(ms, digits = 2)
+
 ggplot(data = subset(ms), 
       aes(x = condition, y = m, fill =  sent.type)) + 
   facet_grid(. ~ truth) +
@@ -313,8 +321,8 @@ Just negative trials:
 
 ```{r}
 ggplot(data = subset(ms, sent.type == "Negative"), 
-      aes(x = condition, y = m)) + 
-  facet_grid(. ~ truth) + 
+      aes(x = truth, y = m, fill = condition)) + 
+  #facet_grid(. ~ truth) + 
   geom_bar(stat = "identity", position = "dodge") + 
   geom_errorbar(aes(ymin = cil, ymax = cih), 
                 position = position_dodge(.9), width = 0) + 
@@ -350,23 +358,36 @@ ggplot(data = hist_data, aes(y = count, x = resp,
 Basic continuous models:
 
 ```{r}
-contrasts(d.exp1$condition) <- rbind(.5, -.5)
-contrasts(d.exp1$truth) <- rbind(.5, -.5)
+contrasts(d.exp2$condition) <- rbind(.5, -.5)
+contrasts(d.exp2$truth) <- rbind(.5, -.5)
 
-model.noage <- lmer(resp ~ condition * truth  
-                    + (1 + truth|subid) 
-                    + (1 + condition*truth|item), 
-                    data = filter(d.exp2, sent.type ==  "Negative"))
-summary(model.noage)
-
+#maximal model (truth * condition | item) does not converge
 #This is the maximal model that converges
+model.noage <- lmer(resp ~ condition * truth  
+                    + (truth|subid) 
+                    + (truth|item), 
+                    data = filter(d.exp2, sent.type ==  "Negative"))
+kable(summary(model.noage)$coefficients, digits = 2)
+
 model.age <- lmer(resp ~ condition * agegroup * truth  
-                  + (1 + truth|subid) 
-                  + (1 + condition*truth|item), 
+                  + (truth|subid) 
+                  + (truth|item), 
                   data = filter(d.exp2, sent.type ==  "Negative"))
-summary(model.age)
+kable(summary(model.age)$coefficients, digits = 2)
 
 anova(model.age, model.noage)
+
+```
+
+What about just true negs?
+
+```{r}
+
+model.kids.trueneg <- lmer(resp ~ condition
+                    + (1 |subid) 
+                    + (condition |item), 
+                    data = filter(d.exp2, sent.type ==  "Negative" & truth == "True"))
+kable(summary(model.kids.trueneg)$coefficients, digits = 2)
 
 ```
 
