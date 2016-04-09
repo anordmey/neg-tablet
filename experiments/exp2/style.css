@@ -44,28 +44,38 @@ body {
     margin-left: auto;
 }
 
-.cdiv {
+.cells {
     display: table-cell;
-    text-align: center
+    text-align: center;
 }
 
-.pic {
+.cdiv {
+    display: inline-block;
+    text-align: center;
     width: 200px;
-    display: none;
-    z-index: 30;
+    height: 218px;
     border : 10px solid white;
-    background-size: 200 auto;
-    margin-right: auto;
-    margin-left: auto;
 }
 
 .selectedPic {
+    display: inline-block;
+    text-align: center;
     width: 200px;
-    display: none;
-    z-index: 40;
+    height: 218px;
     border : 10px solid red;
-    background-size: 200 auto;
 }
+
+.pic {
+    width: 125px;
+    display: none;
+    z-index: 30;
+    background-size: 200 auto;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 40px;
+}
+
+
 
 #listenDiv{
     margin-right: auto;
@@ -95,17 +105,27 @@ body {
     line-height: 0
 }
 
-#slider {
-    margin: 0 auto;
-    width: 87%;
+#smileyScale{
+    position: relative;
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+    width: 75%;
 }
 
-#slider label {
-    position: absolute;
-    width: 20px;
-    margin-left: -10px;
+.scale{
+    display: table-cell;
     text-align: center;
-    margin-top: 20px;
+}
+
+.spic{
+    width: 100px;
+    border : 10px solid white;
+}
+
+.scaleChoice{
+    width: 100px;
+    border : 10px solid white;
 }
 
 .stageInstructions {
@@ -137,12 +157,12 @@ button {
     margin: 10px;
     padding-left: 5px;
     padding-right: 5px;
-    height: 29px;
+    height: 100px;
     min-width: 70px;
 }
 
 #sentenceText {
-  font-size: 1.5em;
+  font-size: .5em;
   font-weight: bold;
 }
 
