@@ -4,8 +4,7 @@ Neg-Tablet
 Experiments can be viewed at:
 
 http://anordmey.github.io/neg-tablet/experiments/exp1/negadult.html (Experiment 1)
-http://anordmey.github.io/neg-tablet/experiments/exp2/negadult.html (Experiment 2)
-http://anordmey.github.io/neg-tablet/experiments/exp3/negkids.html (Experiment 3)
+http://anordmey.github.io/neg-tablet/experiments/exp2/negkids.html (Experiment 2)
 
 The "experiments" directory contains experiment code.  
 
