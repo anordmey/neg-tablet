@@ -72,7 +72,7 @@ Histogram of rating scale:
 qplot(d.exp1$rating, geom = "histogram") + plot.style
 ```
 
-Plot mean ratings for every trial type:
+Plot mean ratings for every trial type (Table 4 in paper):
 
 ```{r}
 ms <- d.exp1 %>%
@@ -119,7 +119,7 @@ ggplot(data = ms, aes(x = condition, y = rating, fill = neg.concept)) +
   plot.style
 ```
 
-Just look at true negatives:
+Just look at true negatives (Figure 2 in paper)
 
 ```{r}
 d.exp1.trueneg <- filter(d.exp1, sentence.type ==  "Negative" & truth.value == TRUE)
@@ -149,8 +149,13 @@ All data:
 ```{r}
 #deviation coding
 contrasts(d.exp1$sentence.type) <- rbind(.5, -.5)
+contrasts(d.exp1$sentence.type)
+
 contrasts(d.exp1$condition) <- rbind(.5, -.5)
+contrasts(d.exp1$condition)
+
 contrasts(d.exp1$truth.value) <- rbind(.5, -.5)
+contrasts(d.exp1$truth.value)
 
 model.exp1.all <- lmer(rating ~ sentence.type * condition * truth.value +
                          (sentence.type * truth.value | subid) +
@@ -163,7 +168,10 @@ kable(summary(model.exp1.all)$coefficients, digits = 2)
 Just negative sentences: 
 ```{r}
 contrasts(d.exp1.neg$condition) <- rbind(.5, -.5)
+contrasts(d.exp1.neg$condition)
+
 contrasts(d.exp1.neg$truth.value) <- rbind(.5, -.5)
+contrasts(d.exp1.neg$truth.value)
 
 model.exp1.neg <- lmer(rating ~ condition * truth.value +
                          (truth.value | subid) + 
@@ -173,11 +181,17 @@ model.exp1.neg <- lmer(rating ~ condition * truth.value +
 kable(summary(model.exp1.neg)$coefficients, digits = 2)
 ```
 
-Just true negative sentences: 
+Just true negative sentences (Table 1 in paper): 
 ```{r}
 contrasts(d.exp1.trueneg$condition) <- rbind(.5, -.5)
+contrasts(d.exp1.trueneg$condition)
+
 contrasts(d.exp1.trueneg$neg.concept) <- rbind(.5, -.5)
-contrasts(d.exp1.trueneg$neg.syntax) <- cbind(rbind(.5, 0,-.5), rbind(0, .5, -.5))
+contrasts(d.exp1.trueneg$neg.concept)
+
+d.exp1.trueneg$neg.syntax <- factor(d.exp1.trueneg$neg.syntax)
+contrasts(d.exp1.trueneg$neg.syntax) <- rbind(.5, -.5)
+contrasts(d.exp1.trueneg$neg.syntax)
 
 model.exp1.trueneg <- lmer(rating ~ condition * neg.concept * neg.syntax +
                              (neg.concept * neg.syntax | subid) + 
@@ -291,7 +305,7 @@ ggplot(data = cat_counts, aes(x = condition, y = counts, fill = type)) +
   plot.style
 ```
 
-Mean responses to all sentences:
+Mean responses to all sentences (Table 5 in paper):
 
 ```{r}
 ms <- d.exp2 %>%
@@ -306,8 +320,8 @@ ms$truth <- factor(ms$truth, levels=c("True","False"))
 kable(ms, digits = 2)
 
 ggplot(data = subset(ms), 
-      aes(x = condition, y = m, fill =  sent.type)) + 
-  facet_grid(. ~ truth) +
+      aes(x = truth, y = m, fill =  condition)) + 
+  facet_grid(. ~ sent.type) +
   geom_bar(stat = "identity", position = "dodge") +
   geom_errorbar(aes(ymin = cil, ymax = cih), 
                 position = position_dodge(.9), width = 0) + 
@@ -317,7 +331,7 @@ ggplot(data = subset(ms),
   plot.style
 ```
 
-Just negative trials:
+Just negative trials (Figure 3 in paper):
 
 ```{r}
 ggplot(data = subset(ms, sent.type == "Negative"), 
@@ -332,7 +346,7 @@ ggplot(data = subset(ms, sent.type == "Negative"),
   plot.style
 ```
 
-Histogram of trial ratings: 
+Histogram of trial ratings (Figure 4 in paper): 
 
 ```{r}
 truenegs <- filter(ms, truth == "True" & sent.type ==  "Negative")
@@ -357,9 +371,13 @@ ggplot(data = hist_data, aes(y = count, x = resp,
 
 Basic continuous models:
 
+Table 2 in paper: 
 ```{r}
 contrasts(d.exp2$condition) <- rbind(.5, -.5)
+contrasts(d.exp2$condition)
+
 contrasts(d.exp2$truth) <- rbind(.5, -.5)
+contrasts(d.exp2$truth)
 
 #maximal model (truth * condition | item) does not converge
 #This is the maximal model that converges
@@ -368,7 +386,10 @@ model.noage <- lmer(resp ~ condition * truth
                     + (truth|item), 
                     data = filter(d.exp2, sent.type ==  "Negative"))
 kable(summary(model.noage)$coefficients, digits = 2)
+```
 
+Including age does not improve model fit:
+```{r}
 model.age <- lmer(resp ~ condition * agegroup * truth  
                   + (truth|subid) 
                   + (truth|item), 
@@ -382,7 +403,6 @@ anova(model.age, model.noage)
 What about just true negs?
 
 ```{r}
-
 model.kids.trueneg <- lmer(resp ~ condition
                     + (1 |subid) 
                     + (condition |item), 
@@ -391,9 +411,13 @@ kable(summary(model.kids.trueneg)$coefficients, digits = 2)
 
 ```
 
-T-tests by age group:
+T-tests:
 
 ```{r}
+#All kids
+subs <- aggregate(resp ~ subid + condition, d.exp2, mean)
+t.test(resp ~ condition, subs)
+
 #Three-year-olds
 threes <- filter(d.exp2, agegroup ==  "3")
 threes_subs <- aggregate(resp ~ subid + condition, threes, mean)
