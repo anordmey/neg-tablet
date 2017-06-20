@@ -216,6 +216,15 @@ d.exp2$sent.type <- factor(d.exp2$sent.type,
 
 d.exp2$condition <- factor(d.exp2$condition, 
                            labels = c("None", "Target"))
+
+demographics <- read.csv("data/demographics.csv")
+
+d.exp2 <- merge(d.exp2, demographics)
+
+initial.ns <- d.exp2 %>%
+  group_by(condition, agegroup) %>%
+  summarize(ns = n.unique(subid))
+print(initial.ns)
 ```
 
 Condense scale from 5-point to 3-point
@@ -241,6 +250,11 @@ ntrials <- d.exp2 %>%
 for (i in ntrials$subid) {
   d.exp2 <- filter(d.exp2, subid != i)
 }
+
+inter.ns <- d.exp2 %>%
+  group_by(condition, agegroup) %>%
+  summarize(ns = n.unique(subid))
+print(inter.ns)
 ```
 
 Reject subjects who don't understand scale (based on positive sentences):
@@ -263,11 +277,24 @@ for (i in reject$subid) {
 }
 ```
 
-Make sure there aren't any kids who just used one side of scale. Reject kids who only chose a single data point
+Make sure there aren't any kids who just used one side of scale. Reject kids who only chose a single data point. Check final ns & age info.
 
 ```{r}
 scaleUse <- aggregate(resp2 ~ subid, d.exp2, n.unique)
 table(scaleUse$resp2) #Are any resp2 = 1
+
+final.ns <- d.exp2 %>%
+  group_by(condition, agegroup) %>%
+  summarize(ns = n.unique(subid), 
+            ages = mean(age),
+            min.age = min(age),
+            max.age = max(age))
+print(final.ns)
+
+gender <- d.exp2 %>%
+  group_by(condition, agegroup, gender) %>%
+  summarize(ns = n.unique(subid))
+print(gender)
 ```
 
 ### Plot data, all ages
