@@ -439,7 +439,7 @@ anova(model.age, model.noage)
 
 ```
 
-Including age does not improve model fit:
+Including gender does not improve model fit:
 ```{r}
 model.gender <- lmer(resp ~ condition * gender * truth  
                   + (truth|subid) 
