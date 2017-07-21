@@ -415,15 +415,39 @@ model.noage <- lmer(resp ~ condition * truth
 kable(summary(model.noage)$coefficients, digits = 2)
 ```
 
+Including agegroup does not improve model fit:
+```{r}
+model.agegroup <- lmer(resp ~ condition * agegroup * truth  
+                  + (truth|subid) 
+                  + (truth|item), 
+                  data = filter(d.exp2, sent.type ==  "Negative"))
+kable(summary(model.agegroup)$coefficients, digits = 2)
+
+anova(model.agegroup, model.noage)
+
+```
+
 Including age does not improve model fit:
 ```{r}
-model.age <- lmer(resp ~ condition * agegroup * truth  
+model.age <- lmer(resp ~ condition * age * truth  
                   + (truth|subid) 
                   + (truth|item), 
                   data = filter(d.exp2, sent.type ==  "Negative"))
 kable(summary(model.age)$coefficients, digits = 2)
 
 anova(model.age, model.noage)
+
+```
+
+Including age does not improve model fit:
+```{r}
+model.gender <- lmer(resp ~ condition * gender * truth  
+                  + (truth|subid) 
+                  + (truth|item), 
+                  data = filter(d.exp2, sent.type ==  "Negative"))
+kable(summary(model.gender)$coefficients, digits = 2)
+
+anova(model.gender, model.noage)
 
 ```
 
